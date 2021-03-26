@@ -1,0 +1,12 @@
+pkgname=findutils
+pkgver=4.8.0
+pkgext=tar.xz
+pkgurlbase=https://ftp.gnu.org/gnu/findutils/
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-nls \
+        CFLAGS="$optflags"
+}
