@@ -1,0 +1,12 @@
+# Avoid unexpected behavior
+export LC_ALL=C
+
+# QTS's /tmp is too small
+export TMPDIR="$HOME"/tmp
+
+#archhome=
+rechome=~/doc/fari-recipes-qts-aarch64
+
+# User-defined variables; used in recipes
+prefix=/usr/pkg
+optflags='-O2 -mcpu=native'
