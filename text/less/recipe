@@ -1,0 +1,15 @@
+pkgname=less
+pkgver=563
+pkgurlbase=http://www.greenwoodsoftware.com/less/
+run_deps="ncursesw"
+
+# regex は PCRE が指定できるが POSIX で十分だろう。
+# auto の場合 POSIX が最優先のようだが，文書にそう明記はされていないので
+# configure に明示しておく。
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --with-regex=posix \
+        CFLAGS="$optflags"
+}

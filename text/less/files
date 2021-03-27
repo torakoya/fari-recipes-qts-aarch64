@@ -1,0 +1,6 @@
+bin/less
+bin/lessecho
+bin/lesskey
+share/man/man1/less.1
+share/man/man1/lessecho.1
+share/man/man1/lesskey.1
