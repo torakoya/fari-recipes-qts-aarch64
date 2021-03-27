@@ -1,0 +1,18 @@
+pkgname=gawk
+pkgver=5.1.0
+pkgext=tar.lz
+pkgurlbase=https://ftp.gnu.org/gnu/gawk/
+
+# Readline は使わない。使うとデバッグ（--debug）で履歴や補完が利く。
+#
+# MPFR は使わない。使うときっとより高精度の計算ができる。
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-nls \
+        --disable-mpfr \
+        --without-readline \
+        CFLAGS="$optflags"
+}
