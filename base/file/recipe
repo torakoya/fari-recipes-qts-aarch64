@@ -1,6 +1,5 @@
 pkgname=file
 pkgver=5.39
-pkgext=tar.gz
 pkgurlbase=ftp://ftp.astron.com/pub/file/
 
 _config () {
