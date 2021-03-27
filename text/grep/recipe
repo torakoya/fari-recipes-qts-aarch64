@@ -1,0 +1,19 @@
+pkgname=grep
+pkgver=3.6
+pkgext=tar.xz
+pkgurlbase=https://ftp.gnu.org/gnu/grep/
+test_deps="perl"
+
+# PCRE は不要だろう（--disable-perl-regexp）。
+#
+# 3.6: テスト中，tests/multibyte-white-space が en_US.UTF-8 での \s と \S の
+# マッチングについて警告を出しているけどいいのかな。テスト自体は成功している。
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-nls \
+        --disable-perl-regexp \
+        CFLAGS="$optflags"
+}
