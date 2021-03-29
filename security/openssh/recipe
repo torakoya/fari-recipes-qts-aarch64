@@ -1,0 +1,56 @@
+pkgname=openssh
+pkgver=8.5p1
+pkgurlbase=https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/
+run_deps="openssl zlib"
+
+# --sysconfdir="$prefix"/etc/ssh は指定しないと $prefix/etc になる。
+
+# --with-privsep-user='[sshd]' は QTS の /etc/passwd を見るといかにも
+# このユーザという感じなので。
+
+# --with-mantype=man は nroff が入っていないと man page ではなく cat page が
+# インストールされてしまうのを避けるため。
+
+# PID 置き場は /var/run；変更したければ --with-pid-dir= で。
+
+# privsep chroot の場所は /var/empty；変更したければ --with-privsep-path= で。
+
+# --with-default-path= はこの sshd にログインした後の PATH の既定値。
+# 指定しないと /usr/bin:/bin:/usr/sbin:/sbin:$prefix/bin になる。
+
+# make tests は一部失敗する。すべて成功させるのはむずかしいかも。
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --sysconfdir="$prefix"/etc/ssh \
+        --with-mantype=man \
+        --with-privsep-user='[sshd]' \
+        --with-default-path="$prefix"/bin:/usr/bin:/bin:"$prefix"/sbin:/usr/sbin:/sbin \
+        CFLAGS="$optflags"
+}
+
+_test () {
+    make tests
+}
+
+# QTS 標準の sshd とホスト鍵を同じにする。
+#
+# （QTS では ssh の設定ディレクトリに /etc/ssh と /etc/config/ssh とがあり，
+# 　両方にホスト鍵あるが，/etc/ssh のものが使われている。
+#
+# 　標準の sshd は -f /etc/config/ssh/sshd_config として起動されているが，
+# 　これはホスト鍵として /etc/ssh のものを使うように書かれている。
+#
+# 　もっとも，そもそも両者のホスト鍵は同じ内容である。）
+_fr_syshostkey () {
+    bkdir="$prefix"/etc/ssh/old
+    if [ -d "$bkdir" ]; then
+        echo "$bkdir: already exists; aborted" >&2
+        exit 1
+    else
+        mkdir -p "$bkdir" && \
+        mv "$prefix"/etc/ssh/ssh_host_* "$bkdir"/ && \
+        ln -s /etc/ssh/ssh_host_* "$prefix"/etc/ssh/
+    fi
+}
