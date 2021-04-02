@@ -1,0 +1,45 @@
+pkgname=ffmpeg
+pkgver=4.3.2
+pkgext=tar.xz
+pkgurlbase=https://www.ffmpeg.org/releases/
+run_deps="bzip2 openssl xz zlib"
+
+# youtube-dl で映像と音声をつなげるくらいにしか使わないので，
+# 外部のコーデックライブラリはとくに使わない。
+
+# configure の出力は ffbuild/config.log。
+
+# doc/print_options.c のコンパイルに $optflags が使われないが，
+# ビルド中に使われるコマンド doc/print_options になるだけなので
+# 許す。
+
+# テストはやめておく。FATE（FFmpeg 製テスト環境）が必要。
+# make check の出力を見ると FATE がなくてもできるぶんだけ
+# やってくれそうだが，失敗する。FATE がないせいかどうかは
+# わからないが。
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --enable-shared \
+        --disable-static \
+        --disable-debug \
+        --enable-openssl \
+        --enable-gpl \
+        --enable-version3 \
+        --enable-nonfree \
+        --disable-ffplay \
+        --optflags="$optflags"
+}
+
+_build () {
+    make V=1 "$@"
+}
+
+_test () {
+    :
+}
+
+_install () {
+    make install V=1 "$@"
+}
