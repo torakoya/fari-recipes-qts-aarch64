@@ -1,0 +1,45 @@
+pkgname=lsof
+pkgver=4.94.0
+pkgurl=https://github.com/lsof-org/lsof/archive/refs/tags/"$pkgver".tar.gz
+build_deps="groff" # soelim
+
+# make のいろいろな変数は，ビルド環境の情報をバイナリに埋め込む
+# （lsof -v で表示される）のをやめさせるため。
+
+# テストは失敗する。
+
+_config () {
+    ./Configure -n linux
+}
+
+__make () {
+    make \
+        BUILD_DATE= \
+        LSOF_HOST=none \
+        LSOF_LOGNAME=none \
+        LSOF_SYSINFO=none \
+        LSOF_USER=none \
+        "$@"
+}
+
+_build () {
+    __make DEBUG="$optflags"
+}
+
+_test () {
+    # バイナリが再コンパイルされるので最適化オプションをつける
+    __make check DEBUG="$optflags"
+}
+
+_install () {
+    for s in "$@"; do
+        if [ "$s" != "${s#DESTDIR=}" ]; then
+            DESTDIR="${s#DESTDIR=}"
+        fi
+    done
+
+    fr_do mkdir -p \"$DESTDIR/$prefix\"/bin &&
+    fr_do install lsof \"$DESTDIR/$prefix\"/bin &&
+    fr_do mkdir -p \"$DESTDIR/$prefix\"/share/man/man8 &&
+    fr_do soelim Lsof.8 \> \"$DESTDIR/$prefix\"/share/man/man8/lsof.8
+}
