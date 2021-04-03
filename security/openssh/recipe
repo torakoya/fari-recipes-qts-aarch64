@@ -1,6 +1,6 @@
 pkgname=openssh
 pkgver=8.5p1
-pkgurlbase=https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/
+arcurlbase=https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/
 run_deps="openssl zlib"
 
 # --sysconfdir="$prefix"/etc/ssh は指定しないと $prefix/etc になる。

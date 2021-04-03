@@ -1,7 +1,7 @@
 pkgname=ffmpeg
 pkgver=4.3.2
-pkgext=tar.xz
-pkgurlbase=https://www.ffmpeg.org/releases/
+arcext=tar.xz
+arcurlbase=https://www.ffmpeg.org/releases/
 run_deps="bzip2 openssl xz zlib"
 
 # youtube-dl で映像と音声をつなげるくらいにしか使わないので，

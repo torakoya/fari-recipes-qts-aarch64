@@ -1,7 +1,7 @@
 pkgname=xz
 pkgver=5.2.5
-pkgext=tar.xz
-pkgurlbase=https://downloads.sourceforge.net/project/lzmautils/
+arcext=tar.xz
+arcurlbase=https://downloads.sourceforge.net/project/lzmautils/
 
 _config () {
     ./configure \

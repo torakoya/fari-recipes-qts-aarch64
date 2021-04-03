@@ -1,6 +1,6 @@
 pkgname=less
 pkgver=563
-pkgurlbase=http://www.greenwoodsoftware.com/less/
+arcurlbase=http://www.greenwoodsoftware.com/less/
 run_deps="ncursesw"
 
 # regex は PCRE が指定できるが POSIX で十分だろう。

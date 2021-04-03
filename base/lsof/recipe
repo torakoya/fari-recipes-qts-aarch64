@@ -1,6 +1,6 @@
 pkgname=lsof
 pkgver=4.94.0
-pkgurl=https://github.com/lsof-org/lsof/archive/refs/tags/"$pkgver".tar.gz
+arcurl=https://github.com/lsof-org/lsof/archive/refs/tags/"$pkgver".tar.gz
 build_deps="groff" # soelim
 
 # make のいろいろな変数は，ビルド環境の情報をバイナリに埋め込む

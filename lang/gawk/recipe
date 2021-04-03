@@ -1,7 +1,7 @@
 pkgname=gawk
 pkgver=5.1.0
-pkgext=tar.lz
-pkgurlbase=https://ftp.gnu.org/gnu/gawk/
+arcext=tar.lz
+arcurlbase=https://ftp.gnu.org/gnu/gawk/
 
 # Readline は使わない。使うとデバッグ（--debug）で履歴や補完が利く。
 #
