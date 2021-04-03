@@ -1,0 +1,14 @@
+pkgname=xz
+pkgver=5.2.5
+pkgext=tar.xz
+pkgurlbase=https://downloads.sourceforge.net/project/lzmautils/
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        --disable-nls \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
