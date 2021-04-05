@@ -1,0 +1,33 @@
+pkgname=python
+pkgver=3.9.4
+srcname=Python-"$pkgver"
+arcext=tar.xz
+arcurlbase=https://www.python.org/ftp/python/"$pkgver"/
+run_deps="bzip2 expat gdbm libffi ncursesw openssl readline sqlite xz zlib"
+
+# --with-system-ffi は渡さなくても yes になった。渡すと警告が出た：
+# configure: WARNING: --with(out)-system-ffi is ignored on this platform
+
+# --with-lto すると -g がつく（configure の LTOFLAGS を参照のこと）。
+# テストを通すためらしい：
+# https://bugs.python.org/issue30345#msg319614
+# じゃあテストが終わったら strip してもいいかな。
+
+_patch () {
+    # ncursesw のヘッダファイルの探し場所を /usr/include/ncursesw から変更
+    sed -i.orig 's|/usr\(/include/ncursesw\)|'"$prefix"'\1|' configure setup.py
+}
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --enable-shared \
+        --enable-optimizations \
+        --with-lto \
+        --with-system-expat \
+        OPT="$optflags"
+}
+
+_test () {
+    make test
+}
