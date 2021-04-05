@@ -1,0 +1,10 @@
+pkgname=lzip
+pkgver=1.22
+arcext=tar.lz
+arcurlbase=http://download.savannah.gnu.org/releases/lzip/
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        CXXFLAGS="$optflags"
+}
