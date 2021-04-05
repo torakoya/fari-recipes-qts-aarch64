@@ -6,7 +6,11 @@ export TMPDIR="$HOME"/tmp
 
 #archome=
 rechome=~/doc/fari-recipes-qts-aarch64
+prefix=/usr/pkg
+
+# nonempty strings mean yes, an empty string means no
+install_strip=1
+install_gzip=1
 
 # User-defined variables; used in recipes
-prefix=/usr/pkg
 optflags='-O2 -mcpu=native'
