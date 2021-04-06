@@ -1,0 +1,74 @@
+pkgname=git
+pkgver=2.31.1
+arcext=tar.xz
+arcurlbase=https://www.kernel.org/pub/software/scm/git/
+run_deps="curl expat pcre2 openssh openssl perl zlib"
+
+# man ページは生成に AsciiDoc と xmlto が必要。このためだけに
+# 入れたくないので git-manpages なる配布物を別途入れる。
+
+# make の変数の説明は，主要なものは INSTALL にある。
+# 完全なリストは Makefile 冒頭のコメントを見る。
+#
+# make の変数によってコンパイルオプションなど（GIT-CFLAGS などに
+# 記録される）が変わると，それが影響するビルド作業がすべて
+# やりなおしになる（ちゃんとやりなおしてくれる，と言うべきか）。
+#
+# configure もあるが，make の変数でしか指定できないものもある
+# （NO_GETTEXT とか）ので，make の変数に一本化する。
+
+# make test は Documentation/MyFirstContribution.txt や
+# Documentation/howto/maintain-git.txt に書かれている。
+# Git の開発者向けかな。ユーザが実行するには重いのかも。
+#
+# で，いくつか失敗する。どうしよう。
+# https://git.wiki.kernel.org/index.php/What_to_do_when_a_test_fails
+
+# Python が必要なのは git-p4（Perforce リポジトリにアクセスする）
+# だけなのでオフにする。
+
+# Perl は INSTALL によれば git add -i/-p などで必要。
+#
+# PERL_PATH は指定しないと決め打ちで /usr/bin/perl になる
+# （それが存在しなくても）。
+
+# PCRE2 は Makefile によれば git log や git grep で利用される。
+# あるとうれしいのかな。
+
+# OpenSSL は INSTALL によれば libcurl が 7.34.0 より古い環境で
+# git-imap-send を使いたいときに必要。あとオフにすると SHA-1 の
+# 実装が Git の自前のものになるのかな。
+
+# INSTALL_SYMLINKS は Makefile によれば bin/ と libexec/ で
+# シンボリックリンクにできるものはそうする。
+
+_config () {
+    :
+}
+
+do_make () {
+    make \
+        V=1 \
+        prefix="$prefix" \
+        NO_OPENSSL=1 \
+        NO_TCLTK=1 \
+        NO_GETTEXT=1 \
+        NO_PYTHON=1 \
+        PERL_PATH="$prefix"/bin/perl \
+        USE_LIBPCRE2=1 \
+        INSTALL_SYMLINKS=1 \
+        CFLAGS="$optflags" \
+        "$@"
+}
+
+_build () {
+    do_make "$@"
+}
+
+_test () {
+    do_make test "$@"
+}
+
+_install () {
+    do_make install "$@"
+}
