@@ -1,0 +1,30 @@
+pkgname=git-manpages
+pkgver=2.31.1
+arcext=tar.xz
+arcurlbase=https://www.kernel.org/pub/software/scm/git/
+
+srcdir=$workdir
+
+_config () {
+    :
+}
+
+_build () {
+    :
+}
+
+_test () {
+    :
+}
+
+_install () {
+    echo blddir="$blddir"
+    for s in "$@"; do
+        if [ "$s" != "${s#DESTDIR=}" ]; then
+            DESTDIR="${s#DESTDIR=}"
+        fi
+    done
+
+    fr_do mkdir -p \"$DESTDIR/$prefix\"/share/man &&
+    fr_do cp -R man* \"$DESTDIR/$prefix\"/share/man
+}
