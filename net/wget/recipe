@@ -1,0 +1,42 @@
+pkgname=wget
+pkgver=1.21.1
+arcext=tar.lz
+arcurlbase=https://ftpmirror.gnu.org/wget/
+run_deps="libidn2 openssl zlib"
+test_deps="perl"
+
+# 正規表現を使うのってコマンドラインオプションの --accept-regex だけかな。
+# じゃあ PCRE までは要らないか。
+
+# --with-ssl=openssl は指定しないと TLS の実装に GnuTLS を使おうとする。
+# 何があるかを自動判別してはくれない。
+
+# --with-openssl はハッシュの実装に自前ではなく OpenSSL のものを使う。
+
+# --disable-debug はコマンドラインオプション -d を消す。このオプションは
+# 役に立つことがありそうなので残す。
+
+# --without-included-regex はシステムの regex を使う。省略しても
+# configure でテストして（checking for working re_compile_pattern）
+# 問題がなければシステムの regex が使われる。手元の glibc 2.30 の
+# regex は問題ありとしてはねられたが，まあだいたい動けばいいや，
+# ほかのプログラムもそれを使っているんだし，という判断で使う。
+# ちなみにシステムのを使うとバイナリが 14％小さくなった（wget 1.21.1）。
+
+# --without-libpsl は警告を抑制するため。libpsl はあるとうれしいのかな。
+
+# テストはいろいろと失敗する。多くは HTTP/Daemon.pm がないため。
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-nls \
+        --disable-xattr \
+        --disable-pcre2 \
+        --with-ssl=openssl \
+        --with-openssl \
+        --without-included-regex \
+        --without-libpsl \
+        CFLAGS="$optflags"
+}
