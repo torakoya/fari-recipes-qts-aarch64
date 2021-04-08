@@ -1,0 +1,46 @@
+pkgname=openssl
+pkgver=1.1.1k
+arcurlbase=https://www.openssl.org/source/
+build_deps=perl
+run_deps=zlib
+
+# LibreSSL は AArch64 では EVP 非対応（crypto/evp/*.c に arm や
+# aarch64 が含まれない）のようなので OpenSSL を使うことにする。
+
+# CFLAGS の既定値は -Wall -O3。まあ上書きしていいか。
+
+# インストールでここの cacert.pem を $prefix/etc/ssl/cert.pem に置きたい：
+# https://curl.se/docs/caextract.html
+
+_patch () {
+    # 静的ライブラリをインストールしない
+    sed -i.orig \
+        's/^\(INSTALL_LIBS=\).*/\1/' \
+        Configurations/unix-Makefile.tmpl
+
+    # man ページの HTML 版をインストールしない
+    sed -i \
+        '/^install_docs:/s/ *install_html_docs//' \
+        Configurations/unix-Makefile.tmpl
+
+    # man ページの suffix を "ssl" にする
+    sed -i \
+        's/^\(MANSUFFIX=\).*/\1ssl/' \
+        Configurations/unix-Makefile.tmpl
+
+    # ビルド日時（openssl version -a などで見られる）を消す
+    sed -i.orig 's/\($date\s*=\s*\).*;/\1"-";/' util/mkbuildinf.pl
+}
+
+_config () {
+    ./config \
+        --prefix="$prefix" \
+        --openssldir="$prefix"/etc/ssl \
+        shared \
+        zlib-dynamic \
+        CFLAGS="$optflags"
+}
+
+_test () {
+    make test
+}
