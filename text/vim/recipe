@@ -1,0 +1,50 @@
+pkgname=vim
+pkgver=8.2.2730
+arcurl=https://github.com/vim/vim/archive/refs/tags/v$pkgver.$arcext
+run_deps="ncursesw"
+
+# あまりに頻繁な（パッチひとつごとの）リリースに追従する間隔は
+# どうしよう。Homebrew は 25 ごと。
+
+# config.log などは src/auto/ にある（configure 本体もここ）。
+
+# インタプリタは何も利用しない。
+
+# --without-local-dir は /usr/local のライブラリを探さなくなる。
+
+# --with-compiledby= は vim --version で見られる "Compiled by"。
+# 空でない文字列を与えないと，"ユーザ@ホスト" が当てられる。
+# なお空にしようとして --without-compiledby とすると "no" となる
+# （--without-xxx == --with-xxx=no）。
+
+# テストはいろいろ失敗する。flaky なものだけかな。
+
+# make install は DESTDIR を指定したときだけ share/applications と
+# share/icons が入る。
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-nls \
+        --enable-multibyte \
+        --disable-acl \
+        --with-tlib=ncursesw \
+        --without-local-dir \
+        --with-compiledby=admin \
+        CFLAGS="$optflags"
+}
+
+_test () {
+    make test "$@"
+}
+
+_install () {
+    for s in "$@"; do
+        if [ "$s" != "${s#DESTDIR=}" ]; then
+            DESTDIR="${s#DESTDIR=}"
+        fi
+    done
+
+    make install "$@" &&
+    fr_do ln -sf vim \"$DESTDIR/$prefix\"/bin/vi
+}
