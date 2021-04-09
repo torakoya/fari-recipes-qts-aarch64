@@ -1,0 +1,62 @@
+pkgname=bzip2
+pkgver=1.0.8
+arcurlbase=https://sourceware.org/pub/bzip2/
+
+_patch () {
+    # 同じディレクトリにあるものを指すシンボリックリンクのリンク先を
+    # 名前だけにする
+    sed -i.orig 's|\(ln -s -f \)$(PREFIX)/bin/|\1|' Makefile &&
+
+    # man ページのインストール場所は $PREFIX/man ではなく $PREFIX/share/man
+    sed -i 's|(PREFIX)/man|(PREFIX)/share/man|g' Makefile &&
+
+    # CFLAGS= の末尾に $optflags を追加
+    sed -i '/^CFLAGS=/s|$|'" $optflags"'|' Makefile &&
+    sed -i.orig '/^CFLAGS=/s|$|'" $optflags"'|' Makefile-libbz2_so
+}
+
+_config () {
+    :
+}
+
+_build () {
+    # Makefile は 2 種類；静的ライブラリ版の Makefile と
+    # 動的ライブラリ版の Makefile-libbz2_so。
+
+    # 動的ライブラリとそれにリンクする bzip2-shared をつくる
+    make -f Makefile-libbz2_so &&
+
+    # 静的ライブラリとそれにリンクする bzip2 の作成を抑制する
+    # （libbz2.a は bzip2.o 以外の *.o より新しいこと）
+    touch libbz2.a bzip2.o &&
+
+    # bzip2-shared を bzip2 とする
+    # （bzip2 は libbz2.a と bzip2.o より新しいこと）
+    cp bzip2-shared bzip2 &&
+
+    make bzip2recover
+}
+
+_test () {
+    LD_LIBRARRY_PATH="$blddir" make check "$@"
+}
+
+_install () {
+    for s in "$@"; do
+        if [ "$s" != "${s#DESTDIR=}" ]; then
+            DESTDIR=${s#DESTDIR=}
+        fi
+    done
+
+    make install PREFIX="$DESTDIR/$prefix" &&
+    fr_do rm -f \"$DESTDIR/$prefix\"/lib/libbz2.a &&
+
+    # 動的ライブラリを入れる（Makefile-libbz2_so には install
+    # ターゲットがない）
+    fr_do cp -P libbz2.so* \"$DESTDIR/$prefix\"/lib &&
+    fr_do ln -sf libbz2.so.1.0 \"$DESTDIR/$prefix\"/lib/libbz2.so &&
+
+    # bunzip2 と bzcat は bzip2 がコピーされる。シンボリックリンクに替える
+    fr_do ln -sf bzip2 \"$DESTDIR/$prefix\"/bin/bunzip2 &&
+    fr_do ln -sf bzip2 \"$DESTDIR/$prefix\"/bin/bzcat
+}
