@@ -1,0 +1,20 @@
+pkgname=zsh
+pkgver=5.8
+arcext=tar.xz
+arcurlbase=https://downloads.sourceforge.net/project/zsh/zsh/$pkgver/
+run_deps=ncursesw
+
+# 悩んだ configure オプション：
+# * --disable-locale，ロケール対応がシェルで必要だろうか
+# * --disable-gdbm，GDBM は今のところなくて困っていない
+# * --enable-pcre，まあ不要だろう
+# * --enable-unicode9，まあ不要だろう
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --enable-multibyte \
+        --disable-locale \
+        --disable-gdbm \
+        CFLAGS="$optflags"
+}
