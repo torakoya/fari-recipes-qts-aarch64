@@ -1,0 +1,41 @@
+pkgname=coreutils
+pkgver=8.32
+arcext=tar.xz
+arcurlbase=https://ftpmirror.gnu.org/gnu/coreutils/
+test_deps="perl"
+
+# AArch64 だと ls.c のコンパイルで SYS_getdents がないというエラー。
+# upstream では修正されている（8.31 の版に戻されている）。
+# http://git.savannah.gnu.org/cgit/coreutils.git/commit/?id=10fcb97bd728f09d4a027eddf8ad2900f0819b0a
+# https://lists.gnu.org/archive/html/bug-coreutils/2020-03/msg00005.html
+
+# libcap は ls で capability 情報を持っているファイルに色をつけるのに
+# 使っているだけ。
+
+# GMP は expr と factor で使われる。GMP なしで扱えるのは 2^62 までかな：
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=806947
+# それでじゅうぶんだろう。
+
+# --with-openssl で OpenSSL のハッシュの実装を借りることができる。
+# 同じ仕事をする実装が重複しなくなるのはいいんだけど，Coreutils
+# はあまりいろいろなライブラリに依存させるべきではないとも思う。
+# まあ / とか /usr とかに入れるつもりでビルドしてはいないから
+# いいんだけど。
+
+# テストは tests/misc/timeout-group と tests/id/zero が失敗する。
+
+_patch () {
+    curl 'http://git.savannah.gnu.org/cgit/coreutils.git/patch/?id=10fcb97bd728f09d4a027eddf8ad2900f0819b0a' | patch -p1
+}
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-nls \
+        --disable-xattr \
+        --disable-acl \
+        --disable-libcap \
+        --without-gmp \
+        CFLAGS="$optflags"
+}
