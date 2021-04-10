@@ -1,0 +1,13 @@
+pkgname=dash
+pkgver=0.5.11.3
+arcurlbase=http://gondor.apana.org.au/~herbert/dash/files/
+
+# --enable-fnmatch とか --enable-glob を与えるとサイズを小さくできる
+# だろうが，DASH は独自拡張のない状態にしたい。
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        CFLAGS="$optflags"
+}
