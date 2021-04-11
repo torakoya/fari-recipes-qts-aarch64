@@ -1,5 +1,5 @@
 pkgname=ffmpeg
-pkgver=4.3.2
+pkgver=4.4
 arcext=tar.xz
 arcurlbase=https://www.ffmpeg.org/releases/
 run_deps="bzip2 openssl xz zlib"
@@ -13,10 +13,8 @@ run_deps="bzip2 openssl xz zlib"
 # ビルド中に使われるコマンド doc/print_options になるだけなので
 # 許す。
 
-# テストはやめておく。FATE（FFmpeg 製テスト環境）が必要。
-# make check の出力を見ると FATE がなくてもできるぶんだけ
-# やってくれそうだが，失敗する。FATE がないせいかどうかは
-# わからないが。
+# テストは FATE（FFmpeg 製テスト環境）がなければ一部だけ実行される。
+# lavf-mxf で失敗する。
 
 _config () {
     ./configure \
@@ -37,7 +35,7 @@ _build () {
 }
 
 _test () {
-    :
+    make check V=1 "$@"
 }
 
 _install () {
