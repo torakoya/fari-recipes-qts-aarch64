@@ -42,12 +42,6 @@ _test () {
 }
 
 _install () {
-    for s in "$@"; do
-        if [ "$s" != "${s#DESTDIR=}" ]; then
-            DESTDIR=${s#DESTDIR=}
-        fi
-    done
-
     make install PREFIX="$DESTDIR/$prefix" &&
     fr_do rm -f \"$DESTDIR/$prefix\"/lib/libbz2.a &&
 

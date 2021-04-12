@@ -18,13 +18,6 @@ _test () {
 }
 
 _install () {
-    echo blddir="$blddir"
-    for s in "$@"; do
-        if [ "$s" != "${s#DESTDIR=}" ]; then
-            DESTDIR="${s#DESTDIR=}"
-        fi
-    done
-
     fr_do mkdir -p \"$DESTDIR/$prefix\"/share/man &&
     fr_do cp -R man* \"$DESTDIR/$prefix\"/share/man
 }

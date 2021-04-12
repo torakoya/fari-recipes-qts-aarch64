@@ -39,12 +39,6 @@ _test () {
 }
 
 _install () {
-    for s in "$@"; do
-        if [ "$s" != "${s#DESTDIR=}" ]; then
-            DESTDIR="${s#DESTDIR=}"
-        fi
-    done
-
     make install "$@" &&
     fr_do ln -sf vim \"$DESTDIR/$prefix\"/bin/vi
 }

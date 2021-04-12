@@ -32,12 +32,6 @@ _test () {
 }
 
 _install () {
-    for s in "$@"; do
-        if [ "$s" != "${s#DESTDIR=}" ]; then
-            DESTDIR="${s#DESTDIR=}"
-        fi
-    done
-
     fr_do mkdir -p \"$DESTDIR/$prefix\"/bin &&
     fr_do install lsof \"$DESTDIR/$prefix\"/bin &&
     fr_do mkdir -p \"$DESTDIR/$prefix\"/share/man/man8 &&
