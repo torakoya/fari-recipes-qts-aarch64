@@ -1,6 +1,6 @@
 pkgname=python
 pkgver=3.9.4
-srcname=Python-"$pkgver"
+arcname=Python
 arcext=tar.xz
 arcurlbase=https://www.python.org/ftp/python/"$pkgver"/
 run_deps="bzip2 expat gdbm libffi ncursesw openssl readline sqlite xz zlib"
