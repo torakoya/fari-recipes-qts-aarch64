@@ -1,0 +1,13 @@
+pkgname=mpc
+pkgver=1.2.1
+arcurlbase=https://ftpmirror.gnu.org/mpc/
+run_deps="gmp mpfr"
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
