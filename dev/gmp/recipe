@@ -1,0 +1,13 @@
+pkgname=gmp
+pkgver=6.2.1
+arcext=tar.lz
+arcurlbase=https://ftpmirror.gnu.org/gmp/
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        --without-readline \
+        CFLAGS="$optflags"
+}
