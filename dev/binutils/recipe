@@ -1,0 +1,77 @@
+pkgname=binutils
+pkgver=2.36.1
+arcext=tar.lz
+arcurlbase=https://ftpmirror.gnu.org/binutils/
+blddir=$workdir/objdir
+
+# --enable/disable-plugins は省略すると dlopen が使える環境では
+# enable になる。プラグインってうれしいのかな。
+
+# --with-lib-path は ld/configure 向け。ライブラリのサーチパスの既定値を
+# $prefix だけにする。これを指定しないと，$prefix/TARGET，$prefix，
+# /usr/local，/，/usr の順に lib64 を探し，それから同順に lib を探す。
+# 指定すると，$prefix/TARGET/lib64，$prefix/lib，$prefix/TARGET/lib を
+# 探す。$prefix/lib だけがいいんだけどほか 2 つのディレクトリは
+# つくらないつもりだからまあいいか。
+
+# make check は AArch64 では gold のテストでエラーが出るが無視して
+# よさそうなので -k をつける。
+# 24479 - aarch64 gold make check failure
+# https://sourceware.org/bugzilla/show_bug.cgi?id=24479
+# あと gold のテスト 3 つでエラーが出るなあ：
+# readelf: Error: the PHDR segment is not covered by a LOAD segment
+
+# --enable-shared だけではなく --disable-static も必要。サブディレクトリ
+# のいずれか（あるいはすべて）の既定値が yes なのかな。
+
+# --enable-deterministic-archives は ar と ranlib が -D がデフォルトに
+# なる。-D はタイムスタンプと所有者の UID と GID をゼロにする。
+# binutils/configure を参照。
+
+# lt_cv_sys_lib_dlsearch_path_spec= はバイナリへの RPATH を埋め込みを
+# やめさせるため。
+
+# LEXLIB= は ar と ranlib が libfl が不要なのにリンクしてしまうのを
+# 避けるため。
+
+# tooldir= は指定しないと一部のコマンドと ldscripts が $prefix/TARGET
+# に入る。
+
+# ビルドされた ld のライブラリのサーチパスの既定値が期待どおりに設定
+# されているかどうか確認するには，ld --verbose | grep SEARCH_DIR。
+# gold ではどうすればいいんだろう。
+#
+# あるいは確実に存在しないライブラリを指定して，サーチパスをひととおり
+# 探させてその過程を見てもいいか。ld --verbose -lfoobar とか。こちらは
+# gold でもできるし，-L などでサーチパスを変更した影響も調べられる。
+
+_config () {
+    "$srcdir"/configure \
+        --prefix="$prefix" \
+        --with-system-zlib \
+        --enable-gold \
+        --enable-ld=default \
+        --enable-shared \
+        --disable-static \
+        --disable-nls \
+        --enable-plugins \
+        --enable-64-bit-bfd \
+        --with-lib-path="$prefix"/lib \
+        --enable-deterministic-archives \
+        CFLAGS="$optflags" \
+        CXXFLAGS="$optflags"
+}
+
+_build () {
+    lt_cv_sys_lib_dlsearch_path_spec="$prefix"/lib \
+    LEXLIB= \
+    make tooldir="$prefix" "$@"
+}
+
+_test () {
+    make -k check "$@"
+}
+
+_install () {
+    make tooldir="$prefix" install "$@"
+}
