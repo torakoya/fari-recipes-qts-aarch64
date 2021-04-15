@@ -1,0 +1,14 @@
+pkgname=mpfr
+pkgver=4.1.0
+arcext=tar.xz
+arcurlbase=https://ftpmirror.gnu.org/mpfr/
+run_deps=gmp
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
