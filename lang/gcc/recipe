@@ -14,6 +14,12 @@ blddir=$workdir/objdir
 # テストはいろいろ準備が必要そうでめんどうなのでやめておく。でも GCC
 # なんてとくにテストすべきなんだろうなあ。
 
+# インストール後，サーチパスの設定を検査する。LFS を参考に，
+#     $ echo 'int main(){}' > dummy.c
+#     $ cc dummy.c -v -Wl,--verbose &> dummy.log
+# などとして，スタートファイル，ライブラリ，ヘッダファイル，ダイナミック
+# リンカを探す場所が $prefix 内だけであることを確認する。
+
 _patch () {
     # ライブラリ置き場の名前を lib64 から lib に変更する
     sed -i.orig '/mabi\.lp64=/s/lib64/lib/' \
