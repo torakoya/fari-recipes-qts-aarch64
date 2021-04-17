@@ -1,0 +1,104 @@
+pkgname=gcc
+pkgver=10.3.0
+arcext=tar.xz
+arcurlbase=https://ftpmirror.gnu.org/gcc/$pkgname-$pkgver/
+run_deps="gmp mpc mpfr zlib"
+blddir=$workdir/objdir
+
+# TODO:
+# ライブラリの場所が $prefix/lib/../lib となるのを修正したい
+# （.la 内の libdir= とか）。
+
+# 最近の GCC でビルドするときでも bootstrap ってしたほうがいいのかな。
+
+# テストはいろいろ準備が必要そうでめんどうなのでやめておく。でも GCC
+# なんてとくにテストすべきなんだろうなあ。
+
+_patch () {
+    # ライブラリ置き場の名前を lib64 から lib に変更する
+    sed -i.orig '/mabi\.lp64=/s/lib64/lib/' \
+        gcc/config/aarch64/t-aarch64-linux &&
+
+    # 標準のライブラリ置き場 /lib と /usr/lib を使わない
+    sed -i.orig '/STANDARD_STARTFILE_PREFIX_[12]/s/"[^"]*"/""/' \
+        gcc/gcc.c &&
+
+    # ダイナミックリンカは /lib ではなく $prefix/lib のものを使う
+    sed -i.orig \
+        '/GLIBC_DYNAMIC_LINKER/s|"/lib|"'"$prefix"'/lib|' \
+        gcc/config/aarch64/aarch64-linux.h &&
+
+    # gcc -v の Configured with: .../configure のパスを切り詰める
+    sed -i.orig '/^TOPLEVEL_CONFIGURE_ARGUMENTS=/,+1s|$progname|${progname##*/}|' configure
+}
+
+# configure のオプションは INSTALL/configure.html を参照。
+
+# --with-native-system-header-dir は生成した GCC がシステムヘッダ
+# ファイルを探す場所。既定値は $prefix によらず /usr/include。
+
+# --with-local-prefix は生成した GCC がローカルヘッダファイルを探す
+# 場所（の /include より前）。既定値は $prefix によらず /usr/local。
+# INSTALL/configure.html によればシステムの標準ヘッダファイルがある
+# 場所を指定してはいけないらしい。システムヘッダの場所 $prefix/include
+# だけ探してくれればいいんだけどな。そこで絶対に存在しないディレクトリ
+# を指定しておく。
+_config () {
+    "$srcdir"/configure \
+        --prefix="$prefix" \
+        --with-native-system-header-dir="$prefix"/include \
+        --with-local-prefix=/nonexistent \
+        --enable-languages=c,c++ \
+        --disable-multilib \
+        --disable-bootstrap \
+        --disable-nls \
+        --with-system-zlib \
+        --enable-shared \
+        --disable-static \
+        CFLAGS="$optflags" \
+        CXXFLAGS="$optflags"
+}
+
+# build_tooldir は指定しないとどんな環境でも $prefix/TARGET になる。
+# make 中につくられた xgcc（gcc のサブセットかな）を叩くときにそこが
+# -B で指定されるため，$prefix にある GCC 由来でないもの（crt*.o とか
+# libc とか）を見つけられない。
+#
+# （build_tooldir って名前から GCC のビルドに使うツールの場所かな；
+# それなら現環境に合わせて設定してくれればいいのに。）
+#
+# 同じ値を持っている tooldir もついでに変更。不要かも。
+
+# lt_cv_sys_lib_dlsearch_path_spec は $prefix/lib を RPATH に
+# 埋め込まないため。パスを 2 つ与えているが，埋め込まれるのはすべて
+# $prefix/lib/../lib（気持ち悪い）だった気がするので，たぶんそれだけを
+# 指定してもいい。
+_build () {
+    make \
+        tooldir="$prefix" \
+        build_tooldir="$prefix" \
+        lt_cv_sys_lib_dlsearch_path_spec="$prefix/lib $prefix/lib/../lib" \
+        "$@"
+}
+
+# tooldir と build_tooldir はいちおうここでも与えておく；与えなくても
+# インストール結果に差はなかったが。
+_install () {
+    make \
+        tooldir="$prefix" \
+        build_tooldir="$prefix" \
+        install "$@" &&
+
+    fr_do ln -sf gcc "$DESTDIR$prefix"/bin/cc &&
+
+    # ビルドした人が所有者になっているのを修正する
+    fr_do chown -RP $(id -u):$(id -g) \
+        \"$DESTDIR$prefix/lib/gcc/$("$srcdir"/config.guess)/$pkgver/include\" \
+        \"$DESTDIR$prefix/lib/gcc/$("$srcdir"/config.guess)/$pkgver/include-fixed\" &&
+
+    # LTO プラグインを Binutils にも使わせる
+    # https://github.com/void-linux/void-packages/issues/18725
+    { [ "$DESTDIR" ] || [ ! -d "$prefix/lib/bfd-plugins" ] ||
+        fr_do ln -sf \"$prefix/libexec/gcc/$("$srcdir"/config.guess)/$pkgver/liblto_plugin.so\" \
+            \"$prefix/lib/bfd-plugins\" ; }
+}
