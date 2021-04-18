@@ -1,0 +1,22 @@
+pkgname=texinfo
+pkgver=6.7
+arcext=tar.xz
+arcurlbase=https://ftpmirror.gnu.org/texinfo/
+run_deps="ncurses perl"
+
+# PERL_EXT_CFLAGS を与えないと tp/Texinfo/XS/gnulib/lib/Makefile の
+# CFLAGS が空になる。（ただし与えると tp/Texinfo/XS/Makefile が
+# CFLAGS と PERL_CONF_optimize で二重に最適化フラグをつけてしまう。）
+
+# *.so は libperl.so を必要とするが，libperl.so は $prefix/lib には
+# ないので，*.so にはその場所を RUNPATH に埋め込む。Perl ビルド時に
+# -Wl,--enable-new-dtags を与えていればこちらでも自動的に付与されるが，
+# されなければここで PERL_EXT_LDFLAGS で与えればいいだろう。
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-nls \
+        CFLAGS="$optflags" \
+        PERL_EXT_CFLAGS="$optflags"
+}
