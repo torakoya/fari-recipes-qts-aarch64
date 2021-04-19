@@ -1,0 +1,19 @@
+pkgname=libevent
+pkgver=2.1.12
+srcname=$pkgname-$pkgver-stable
+arcfile=$srcname.$arcext
+arcurlbase=https://github.com/libevent/libevent/releases/download/release-$pkgver-stable/
+run_deps=openssl
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-samples \
+        --disable-static \
+        CFLAGS="$optflags"
+}
+
+_test () {
+    make verify
+}
