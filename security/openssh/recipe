@@ -1,5 +1,5 @@
 pkgname=openssh
-pkgver=8.5p1
+pkgver=8.6p1
 arcurlbase=https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/
 run_deps="openssl zlib"
 
