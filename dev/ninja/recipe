@@ -1,0 +1,36 @@
+pkgname=ninja
+pkgver=1.10.2
+arcurl=https://github.com/ninja-build/ninja/archive/refs/tags/v$pkgver.$arcext
+
+build_deps="python"
+
+_config () {
+    :
+}
+
+_build () {
+    # README には同梱の configure.py を使う方法と CMake を使う方法が
+    # 紹介されているが，Wiki には configure.py の話だけ。そちらにして
+    # おくか。
+
+    # --bootstrap で，いちど ninja がビルドされ，つづけてそれを使って
+    # ninja が再ビルドされる。
+
+    # 勝手に -O2 を指定されるが，CXXFLAGS がそれより後ろに足される
+    # （後ろが優先）からまあいいか。
+
+    CXXFLAGS="$optflags" python3 configure.py --bootstrap --verbose
+}
+
+_test () {
+    ./ninja ninja_test && ./ninja_test --gtest_filter=MyTest.Name
+}
+
+# とりあえず doc/ と misc/ の中身をすべて入れておく。
+_install () {
+    fr_do mkdir -p \"$DESTDIR$prefix\"/bin &&
+    fr_do install ninja \"$DESTDIR$prefix\"/bin &&
+    fr_do mkdir -p \"$DESTDIR$prefix\"/share/doc/ninja/misc &&
+    fr_do cp -R $(find misc -mindepth 1 -maxdepth 1 \! -name __pycache__ \! -name '*.pyc') \"$DESTDIR$prefix\"/share/doc/ninja/misc &&
+    fr_do cp -R doc \"$DESTDIR$prefix\"/share/doc/ninja
+}
