@@ -1,0 +1,90 @@
+pkgname=cmake
+pkgver=3.20.1
+arcurlbase=https://github.com/Kitware/CMake/releases/download/v$pkgver/
+
+run_deps="bzip2 curl expat xz zlib"
+
+blddir=$workdir/objdir
+
+# ビルド時の C のコンパイルのフラグは，bootstrap でつくられる
+# CMakeCache.txt のなかの CMAKE_C_FLAGS + CMAKE_C_FLAGS_RELEASE。
+# C++ も同様；_C_ を _CXX_ に読み替え。
+#
+# CMAKE_C_FLAGS の初期値は CMAKE_C_FLAGS_INIT + bootstrap 時の CFLAGS。
+# CMAKE_C_FLAGS_RELEASE の初期値は CMAKE_C_FLAGS_RELEASE_INIT +
+# "-O3 -DNDEBUG"。
+#
+# CMake の原則としては，リリースビルドとかデバッグビルドとかのビルド
+# 種別に共通のフラグは CMAKE_C_FLAGS，ビルド種別ごとに変わるものは
+# CMAKE_C_FLAGS_RELEASE などに設定する。ということは最適化フラグは
+# CMAKE_C_FLAGS ではなく CMAKE_C_FLAGS_RELEASE などに設定すべきだろう
+# （こちらから何も指定しなかったときの初期値もそうなっている）。
+#
+# 原則を守るなら bootstrap のコンパイルフラグ CFLAGS には最適化フラグは
+# 与えられない。指定するとそれが CMAKE_C_FLAGS に足されてしまうので。
+# bootstrap の最適化の指定はあきらめることになるのかな。まあ bootstrap
+# 時のコンパイル結果がリリース物に含まれないならそれでいいんだけど。
+#
+# それと CMAKE_C_FLAGS_RELEASE の -O3 を消したい。CFLAGS の後ろに
+# つくから上書きもできないし。
+#
+# けっきょく，念のため bootstrap も最適化しておきたいので CFLAGS に
+# 最適化フラグを与え，かつ CMAKE_C_FLAGS と CMAKE_C_FLAGS_RELEASE を
+# 完全に指定する（_INIT で混ぜ込む値を指定するのではなく）ことにした。
+# しかし CMake のバージョンアップ時に CMAKE_C_FLAGS_RELEASE の初期値に
+# -DNDEBUG 以外のものが増えていないかどうかを確認せねばならないのが
+# めんどうだな。Modules/Compiler/GNU.cmake の内容を見ればいいかな。
+
+# man ページを生成するには Sphinx が必要。でも cmake --help-xxx で
+# じゅうぶんな気がする（man ページを見たことはないけど）。
+
+_config () {
+    # bootstrap は cmake のサブセット（かな？）をつくる。make はそれを
+    # 使っておこなわれる。bootstrap は build でおこなうべきかもしれないが
+    # ログをわけたい。
+
+    # bootstrap の --verbose は configure でいうところの
+    # --disable-silent-rules。
+
+    # 必要なライブラリはすべて同梱されている。システムにインストール
+    # 済みのものはそちらを使うようにした。すべて入れたら --system-libs
+    # だけ指定すればよさそう。なお同梱のライブラリは 3 つつくられる
+    # 実行可能ファイルそれぞれに静的にリンクされるのでサイズが気になる
+    # かもしれない。
+
+    # libcurl が nghttp2 にリンクしてあるせいか --system-nghttp2 は
+    # 与えなくてもシステムのものが採用された。与えてもいいだろうけど。
+
+    # -- のうしろは boostrap でビルドされた cmake（のサブセット？）に
+    # 渡されるオプション。
+
+    # CMAKE_SYSTEM_PREFIX_PATH= は $prefix に入れたライブラリを探して
+    # もらうため。指定しないと /lib とか /usr/lib とか /usr/local/lib
+    # とかが探された。configure はライブラリを使うコードをとりあえず
+    # コンパイルしてみてエラーにならないかどうかで判断するが，CMake は
+    # ライブラリを所定の場所から自分で探しだすようだ。
+
+    "$srcdir"/bootstrap \
+        --prefix="$prefix" \
+        --verbose \
+        --system-curl \
+        --system-expat \
+        --system-zlib \
+        --system-bzip2 \
+        --system-liblzma \
+        CFLAGS="$optflags" \
+        CXXFLAGS="$optflags" \
+        -- \
+        -D CMAKE_SYSTEM_PREFIX_PATH="$prefix" \
+        -D CMAKE_C_FLAGS= \
+        -D CMAKE_CXX_FLAGS= \
+        -D CMAKE_C_FLAGS_RELEASE="$optflags -DNDEBUG" \
+        -D CMAKE_CXX_FLAGS_RELEASE="$optflags -DNDEBUG"
+}
+
+# CTEST_OUTPUT_ON_FAILURE=1 は失敗したテストの結果の詳細をコンソールに
+# 出力する。これを指定しなかった場合，Testing/Temporary/LastTest.log
+# に出力が入っていると言われるのだが，何も入っていない。
+_test () {
+    make test CTEST_OUTPUT_ON_FAILURE=1 "$@"
+}
