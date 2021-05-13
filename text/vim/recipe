@@ -42,3 +42,10 @@ _install () {
     make install "$@" &&
     fr_do ln -sf vim \"$DESTDIR/$prefix\"/bin/vi
 }
+
+fr_post_files () {
+    sed -i '
+        /^share\/applications/ d
+        /^share\/icons/ d
+    ' files
+}
