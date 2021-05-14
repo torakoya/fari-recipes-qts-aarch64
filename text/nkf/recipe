@@ -1,0 +1,25 @@
+pkgname=nkf
+pkgver=2.1.5
+arcurlbase=https://osdn.net/dl/nkf/
+
+test_deps=perl
+
+# Perl モジュールは入れない。
+
+_config () {
+    :
+}
+
+_build () {
+    make CFLAGS="$optflags" "$@"
+}
+
+_test () {
+    make test "$@"
+}
+
+_install () {
+    fr_do mkdir -p \"$DESTDIR$prefix/share\" &&
+    make install-main prefix="$DESTDIR$prefix" &&
+    make install-man prefix="$DESTDIR$prefix/share"
+}
