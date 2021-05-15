@@ -1,5 +1,5 @@
 pkgname=python
-pkgver=3.9.4
+pkgver=3.9.5
 arcname=Python
 arcext=tar.xz
 arcurlbase=https://www.python.org/ftp/python/"$pkgver"/
@@ -12,6 +12,16 @@ run_deps="bzip2 expat gdbm libffi ncursesw openssl readline sqlite xz zlib"
 # テストを通すためらしい：
 # https://bugs.python.org/issue30345#msg319614
 # じゃあテストが終わったら strip してもいいかな。
+
+# make install DESTDIR=... は同梱のパッケージ（pip や setuptools）に
+# 関してはシステムのインストール状況を考慮してしまう。同梱のパッケージが
+# システムにすでにインストールされていたら，バージョンが古ければそれを
+# 削除しようとするし，バージョンが同じなら DESTDIR にはインストールして
+# くれない。
+# https://github.com/pypa/pip/issues/3063
+#
+# configure の --with-ensurepip=... を make install 時に変更したければ
+# make install ENSUREPIP=... でできるようだ。
 
 _patch () {
     # ncursesw のヘッダファイルの探し場所を /usr/include/ncursesw から変更
