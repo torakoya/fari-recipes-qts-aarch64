@@ -1,0 +1,15 @@
+pkgname=libffi
+pkgver=3.3
+arcurlbase=ftp://sourceware.org/pub/libffi/
+
+_config () {
+    # --enable-docs または --disable-docs はいずれを与えても文書なしに
+    # なる。両方とも与えないと文書あり。なお文書ありでインストール
+    # されるものは info。
+
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        CFLAGS="$optflags"
+}
