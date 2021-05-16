@@ -1,0 +1,13 @@
+pkgname=libidn2
+pkgver=2.3.1
+arcurlbase=https://ftpmirror.gnu.org/libidn/
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        --disable-nls \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
