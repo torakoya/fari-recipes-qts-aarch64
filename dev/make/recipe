@@ -1,0 +1,13 @@
+pkgname=make
+pkgver=4.3
+arcext=tar.lz
+arcurlbase=https://ftpmirror.gnu.org/make/
+test_deps="perl"
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-nls \
+        CFLAGS="$optflags"
+}
