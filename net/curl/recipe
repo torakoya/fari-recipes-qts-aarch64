@@ -1,0 +1,21 @@
+pkgname=curl
+pkgver=7.76.1
+arcext=tar.xz
+arcurlbase=https://curl.se/download/
+run_deps="libidn2 nghttp2 openssl zlib"
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        --enable-ipv6 \
+        --with-ca-bundle="$prefix"/etc/ssl/cert.pem \
+        --with-nghttp2 \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
+
+_test () {
+    make test "$@"
+}
