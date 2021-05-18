@@ -1,0 +1,18 @@
+pkgname=flex
+pkgver=2.6.4
+arcext=tar.lz
+arcurlbase=https://github.com/westes/flex/releases/download/v$pkgver/
+
+# テストは Flex をインストールするだけなら無視していいらしい
+# （tests/README）。
+
+# LFS ではコマンド flex へのシンボリックリンク lex を張っている。
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        --disable-nls \
+        CFLAGS="$optflags"
+}
