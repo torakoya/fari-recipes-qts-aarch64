@@ -1,0 +1,33 @@
+pkgname=fortune-mod
+pkgver=3.6.0
+arcext=tar.xz
+arcurlbase=https://github.com/shlomif/fortune-mod/releases/download/fortune-mod-$pkgver/
+build_deps="cmake git"
+test_deps="perl"
+
+blddir=$workdir/objdir
+
+# cmake 実行時に rinutils が git clone される。
+
+# データファイルのインストールディレクトリ（LOCALDIR）は fortunes って
+# 複数形なのか。「fortune というプログラムのためのディレクトリ」では
+# なくて「fortune という種類のファイルを置く共用のディレクトリ」って
+# 意味合いなのかな。単数形にしておく。BSD では単数形のようだ
+# （/usr/share/games/fortune）。
+
+# テストには Perl のいろいろなモジュールが必要（INSTALL.asciidoc を参照）。
+
+_patch () {
+    # コマンド fortune のインストール先を games/ ではなく bin/ にする。
+    sed -i.orig 's/"games"/"bin"/' CMakeLists.txt
+}
+
+_config () {
+    cmake \
+        -DCMAKE_INSTALL_PREFIX="$prefix" \
+        -DLOCALDIR="$prefix"/share/fortune \
+        -DCMAKE_VERBOSE_MAKEFILE=1 \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_C_FLAGS_RELEASE="$optflags -DNDEBUG" \
+        "$srcdir"
+}
