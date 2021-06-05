@@ -1,0 +1,44 @@
+pkgname=lv
+pkgver=4.51
+srcname=lv451
+arcfile="$srcname".$arcext
+arcurlbase=https://web.archive.org/web/20150915000000/www.ff.iij4u.or.jp/~nrt/freeware/
+
+blddir=$workdir/$srcname/build
+
+# ソースコード入手元は Homebrew をマネした。
+
+_config () {
+    # --libdir= は，lv -h で表示される文書 lv.hlp を PREFIX/lib/lv に
+    # インストールするのを PREFIX/share/lv に変える。
+    #
+    # 本来は libdir はそのままで lv.hlp のインストール先を libdir で
+    # なくすべきだが，libdir にインストールされるのはこのファイルだけ
+    # なので手抜き。
+
+    # --mandir= は PREFIX/man を PREFIX/share/man に修正。
+
+    CFLAGS="$optflags" \
+    LIBS=-lncursesw \
+    ../src/configure \
+        --prefix="$prefix" \
+        --libdir="$prefix"/share \
+        --mandir="$prefix"/share/man
+}
+
+_test () {
+    :
+}
+
+_install () {
+    mkdir -p \
+        "$DESTDIR$prefix"/bin \
+        "$DESTDIR$prefix"/share/man/man1 &&
+
+    # Makefile が DESTDIR を考慮しないので各変数を定義しなおす。
+    make install \
+        prefix="$DESTDIR$prefix" \
+        libdir="$DESTDIR$prefix"/share \
+        mandir="$DESTDIR$prefix"/share/man \
+        "$@"
+}
