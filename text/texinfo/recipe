@@ -1,5 +1,5 @@
 pkgname=texinfo
-pkgver=6.7
+pkgver=6.8
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/texinfo/
 run_deps="ncurses perl"
