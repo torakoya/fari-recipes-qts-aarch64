@@ -20,6 +20,11 @@ run_deps="bzip2 expat gdbm libffi ncursesw openssl readline sqlite xz zlib"
 # くれない。
 # https://github.com/pypa/pip/issues/3063
 #
+# そこで同梱のパッケージは Fari での管理からはずす。--with-ensurepip=no
+# を指定して，make install では同梱のパッケージをインストールさせない。
+# make install 後に同梱のパッケージをインストールしたければ
+# python3 -m ensurepip。
+#
 # configure の --with-ensurepip=... を make install 時に変更したければ
 # make install ENSUREPIP=... でできるようだ。
 
@@ -35,6 +40,7 @@ _config () {
         --enable-optimizations \
         --with-lto \
         --with-system-expat \
+        --with-ensurepip=no \
         OPT="$optflags"
 }
 
