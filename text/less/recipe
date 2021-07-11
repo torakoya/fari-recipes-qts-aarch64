@@ -1,5 +1,5 @@
 pkgname=less
-pkgver=581.2
+pkgver=590
 arcurlbase=http://www.greenwoodsoftware.com/less/
 run_deps="ncursesw"
 
