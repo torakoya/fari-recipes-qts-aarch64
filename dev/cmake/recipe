@@ -1,5 +1,5 @@
 pkgname=cmake
-pkgver=3.20.5
+pkgver=3.21.0
 arcurlbase=https://github.com/Kitware/CMake/releases/download/v$pkgver/
 
 run_deps="bzip2 curl expat xz zlib"
@@ -69,7 +69,7 @@ _config () {
 
     "$srcdir"/bootstrap \
         --prefix="$prefix" \
-        --docdir=share/doc/cmake-3.20 \
+        --docdir=share/doc/cmake-"${pkgver%.*}" \
         --verbose \
         --system-curl \
         --system-expat \
