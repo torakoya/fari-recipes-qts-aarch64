@@ -1,5 +1,5 @@
 pkgname=grep
-pkgver=3.6
+pkgver=3.7
 arcext=tar.xz
 arcurlbase=https://ftp.gnu.org/gnu/grep/
 test_deps="perl"
