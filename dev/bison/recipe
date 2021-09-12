@@ -7,9 +7,6 @@ run_deps="readline"
 # --enable-relocatable は指定しない（doc/relocatable.texi）。
 # このプログラムだけリロケータブルになってもしかたがないと思う。
 # なお指定するとサイズがちょっとだけ大きくなる（誤差だが）。
-#
-# 3.7.6: make の最後にこれが出る（3 回中 3 回）：
-# make: warning:  Clock skew detected.  Your build may be incomplete.
 
 _config () {
     ./configure \
