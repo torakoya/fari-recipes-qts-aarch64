@@ -1,5 +1,5 @@
 pkgname=dash
-pkgver=0.5.11.3
+pkgver=0.5.11.5
 arcurlbase=http://gondor.apana.org.au/~herbert/dash/files/
 
 # --enable-fnmatch とか --enable-glob を与えるとサイズを小さくできる
