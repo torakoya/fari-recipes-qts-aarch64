@@ -1,5 +1,5 @@
 pkgname=binutils
-pkgver=2.36.1
+pkgver=2.37
 arcext=tar.lz
 arcurlbase=https://ftpmirror.gnu.org/binutils/
 blddir=$workdir/objdir
@@ -44,6 +44,16 @@ blddir=$workdir/objdir
 # あるいは確実に存在しないライブラリを指定して，サーチパスをひととおり
 # 探させてその過程を見てもいいか。ld --verbose -lfoobar とか。こちらは
 # gold でもできるし，-L などでサーチパスを変更した影響も調べられる。
+
+# 2.37 で新設の --enable-pgo-build[=lto] の情報はこのあたりか：
+# https://sourceware.org/pipermail/binutils/2020-October/113642.html
+# https://sourceware.org/pipermail/binutils/2020-October/113943.html
+# https://sourceware.org/bugzilla/show_bug.cgi?id=26766
+
+# TODO: *.la 内の dependency_libs= に -L/.../objdir/libiberty/pic と
+# -liberty がついてしまう。同梱の Libiberty はインストールしないので
+# （だからビルドディレクトリ内の Libiberty 生成場所が -L で指定されて
+# いるのだろう），それが指定されているのはまずい。
 
 _config () {
     "$srcdir"/configure \
