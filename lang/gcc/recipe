@@ -1,5 +1,5 @@
 pkgname=gcc
-pkgver=10.3.0
+pkgver=11.2.0
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/gcc/$pkgname-$pkgver/
 run_deps="gmp mpc mpfr zlib"
@@ -8,6 +8,8 @@ blddir=$workdir/objdir
 # TODO:
 # ライブラリの場所が $prefix/lib/../lib となるのを修正したい
 # （.la 内の libdir= とか）。
+
+# gcc.info をインストールするには makeinfo が必要。
 
 # 最近の GCC でビルドするときでも bootstrap ってしたほうがいいのかな。
 
