@@ -11,7 +11,9 @@ _config () {
         --disable-static \
         --enable-ipv6 \
         --with-openssl \
-        --with-ca-bundle="$prefix"/etc/ssl/cert.pem \
+        --without-ca-bundle \
+        --without-ca-path \
+        --with-ca-fallback \
         --with-nghttp2 \
         CFLAGS="$optflags" \
         LT_SYS_LIBRARY_PATH="$prefix"/lib
