@@ -1,5 +1,5 @@
 pkgname=openssl
-pkgver=1.1.1l
+pkgver=3.0.0
 arcurlbase=https://www.openssl.org/source/
 build_deps=perl
 run_deps=zlib
@@ -15,7 +15,7 @@ run_deps=zlib
 _patch () {
     # 静的ライブラリをインストールしない
     sed -i.orig \
-        's/^\(INSTALL_LIBS=\).*/\1/' \
+        's/^\(INSTALL_LIBS\)=/\1_ignored=/' \
         Configurations/unix-Makefile.tmpl
 
     # man ページの HTML 版をインストールしない
@@ -23,19 +23,16 @@ _patch () {
         '/^install_docs:/s/ *install_html_docs//' \
         Configurations/unix-Makefile.tmpl
 
-    # man ページの suffix を "ssl" にする
-    sed -i \
-        's/^\(MANSUFFIX=\).*/\1ssl/' \
-        Configurations/unix-Makefile.tmpl
-
     # ビルド日時（openssl version -a などで見られる）を消す
     sed -i.orig 's/\($date\s*=\s*\).*;/\1"-";/' util/mkbuildinf.pl
 }
 
 _config () {
+    # しばらくは OpenSSL 1.x も併用するので，3.x の etc/ssl を
+    # etc/ssl3 に改名しておく。
     ./config \
         --prefix="$prefix" \
-        --openssldir="$prefix"/etc/ssl \
+        --openssldir="$prefix"/etc/ssl3 \
         shared \
         zlib-dynamic \
         CFLAGS="$optflags"
