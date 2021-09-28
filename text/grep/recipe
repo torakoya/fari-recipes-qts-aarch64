@@ -1,7 +1,7 @@
 pkgname=grep
 pkgver=3.7
 arcext=tar.xz
-arcurlbase=https://ftp.gnu.org/gnu/grep/
+arcurlbase=https://ftpmirror.gnu.org/grep/
 test_deps="perl"
 
 # PCRE は不要だろう（--disable-perl-regexp）。
