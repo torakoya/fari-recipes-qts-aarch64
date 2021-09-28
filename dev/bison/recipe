@@ -1,5 +1,5 @@
 pkgname=bison
-pkgver=3.8.1
+pkgver=3.8.2
 arcext=tar.lz
 arcurlbase=https://ftpmirror.gnu.org/bison/
 run_deps="readline"
