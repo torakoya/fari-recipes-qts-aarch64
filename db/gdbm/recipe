@@ -1,0 +1,19 @@
+pkgname=gdbm
+pkgver=1.21
+arcurlbase=https://ftpmirror.gnu.org/gdbm/
+run_deps="ncurses readline"
+
+# dbm やndbm の互換 API，libgdbm_compat はインストールしない。
+# インストールするには --enable-libgdbm-compat。
+
+# readline は bin/gdbmtool が使う。必要だろうか。とりあえず使わせた。
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        --disable-nls \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
