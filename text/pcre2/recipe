@@ -1,0 +1,30 @@
+pkgname=pcre2
+pkgver=10.38
+arcext=tar.bz2
+arcurlbase=https://github.com/PhilipHazel/pcre2/releases/download/pcre2-$pkgver/
+
+_patch () {
+    # man ページの HTML 版と plain text 版をインストールしない。
+    sed -i.orig \
+        -e '/^install-data-am:/s/\s*install-dist_htmlDATA//' \
+        -e '/^dist_doc_DATA/,/^$/ { /doc\//d }' \
+        Makefile.in
+}
+
+_config () {
+    # コマンド pcre2grep や pcre2test にライブラリをリンクする
+    # 以下のオプションは指定しない。コマンドの利便性は不要。
+    # * --enable-pcre2grep-libz
+    # * --enable-pcre2grep-libbz2
+    # * --enable-pcre2test-libreadline
+
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        --enable-pcre2-16 \
+        --enable-pcre2-32 \
+        --enable-jit \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
