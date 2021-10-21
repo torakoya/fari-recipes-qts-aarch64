@@ -1,5 +1,5 @@
 pkgname=gdbm
-pkgver=1.21
+pkgver=1.22
 arcurlbase=https://ftpmirror.gnu.org/gdbm/
 run_deps="ncurses readline"
 
