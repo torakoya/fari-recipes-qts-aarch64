@@ -1,0 +1,29 @@
+pkgname=tzdata
+pkgver=2021e
+arcname=tzdb
+arcext=tar.lz
+arcurlbase=https://data.iana.org/time-zones/releases/
+
+_config () {
+    :
+}
+
+_build () {
+    # TOPDIR は最終的なインストール先，DESTDIR はインストール物の
+    # 一時的な作成場所。インストール物の一時作成場所に両方とも
+    # 使えそうだが，TOPDIR はその値がコマンドやライブラリに
+    # 埋め込まれてしまう。
+
+    make DESTDIR="$workdir"/dest install
+}
+
+# make check はアーカイブを展開してすぐに実行できてしまう。
+# 開発者向けなのかな。ということでテストは実行しない。
+_test () {
+    :
+}
+
+_install () {
+    fr_do mkdir -p "$DESTDIR$prefix"/share &&
+    fr_do cp -R "$workdir"/dest/usr/share/zoneinfo\* "$DESTDIR$prefix"/share
+}
