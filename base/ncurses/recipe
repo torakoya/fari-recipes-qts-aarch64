@@ -1,0 +1,55 @@
+pkgname=ncurses
+pkgver=6.3
+arcurlbase=https://ftpmirror.gnu.org/ncurses/
+
+_config () {
+    # --enable-pc-files は pkg-config の .pc ファイルを生成する。
+
+    # --without-normal，--without-debug はそれぞれ静的ライブラリ，
+    # デバッグ用ライブラリ（lib*_g.a）の生成を抑制する。
+
+    # --with-manpage-format=normal は man ページを圧縮しない。既定値は
+    # MANPATH にある date(1) の man ページのファイル形式に合わせられる。
+
+    ./configure \
+        --prefix="$prefix" \
+        --without-cxx-binding \
+        --enable-pc-files \
+        --with-shared \
+        --without-normal \
+        --without-debug \
+        --enable-widec \
+        --with-manpage-format=normal \
+        CFLAGS="$optflags"
+}
+
+do_relink_x () {
+    [ -e "$2" ] && [ ! -L "$2" ] && return 0
+
+    fr_do rm -f \"$2\" &&
+    fr_do ln -s \"$1\" \"$2\"
+}
+
+do_relink () {
+    do_relink_x "$1" "$DESTDIR$prefix/$2"
+}
+
+do_relink_lib () {
+    do_relink lib"$1"w.so lib/lib"$1".so &&
+    do_relink "$1"w.pc lib/pkgconfig/"$1".pc
+}
+
+_install () {
+    make install "$@" &&
+
+    # wide-character 版を知らないソフトウェアでもリンクできるようにする。
+
+    do_relink ncursesw include/ncurses &&
+
+    do_relink_lib form &&
+    do_relink_lib menu &&
+    do_relink_lib ncurses &&
+    do_relink_lib panel &&
+
+    do_relink ncursesw6-config bin/ncurses6-config
+}
