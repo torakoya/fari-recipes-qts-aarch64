@@ -1,6 +1,6 @@
 pkgname=libffi
-pkgver=3.3
-arcurlbase=ftp://sourceware.org/pub/libffi/
+pkgver=3.4.2
+arcurlbase=https://github.com/libffi/libffi/releases/download/v$pkgver/
 
 _config () {
     # --enable-docs または --disable-docs はいずれを与えても文書なしに
