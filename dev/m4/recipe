@@ -1,0 +1,15 @@
+pkgname=m4
+pkgver=1.4.19
+arcext=tar.xz
+arcurlbase=https://ftpmirror.gnu.org/m4/
+
+# 1.4.19: テスト 198 が失敗するのはテストのバグ。本流では修正されている。
+# https://trac.macports.org/ticket/62991#comment:22
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-nls \
+        CFLAGS="$optflags"
+}
