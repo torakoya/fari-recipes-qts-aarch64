@@ -1,5 +1,5 @@
 pkgname=git
-pkgver=2.33.1
+pkgver=2.34.0
 arcext=tar.xz
 arcurlbase=https://www.kernel.org/pub/software/scm/git/
 run_deps="curl expat pcre2 openssh openssl perl zlib"
