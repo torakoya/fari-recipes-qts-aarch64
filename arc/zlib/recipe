@@ -1,0 +1,15 @@
+pkgname=zlib
+pkgver=1.2.11
+arcext=tar.xz
+arcurlbase=https://downloads.sourceforge.net/project/libpng/zlib/$pkgver/
+
+_patch () {
+    # 静的ライブラリをインストールしない。
+    sed -i.orig '/^install-lib/,/^$/ { /STATICLIB/d; /libz\.a/d }' Makefile.in
+}
+
+_config () {
+    CFLAGS="$optflags" \
+    ./configure \
+        --prefix="$prefix"
+}
