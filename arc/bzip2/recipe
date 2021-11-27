@@ -38,7 +38,7 @@ _build () {
 }
 
 _test () {
-    LD_LIBRARRY_PATH="$blddir" make check "$@"
+    LD_LIBRARY_PATH="$blddir" make check "$@"
 }
 
 _install () {
