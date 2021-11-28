@@ -1,0 +1,45 @@
+pkgname=zstd
+pkgver=1.5.0
+arcurlbase=https://github.com/facebook/zstd/releases/download/v$pkgver/
+
+# README.md だけでなく lib/README.md や programs/README.md
+# も参考にする。
+
+_patch () {
+    # CFLAGS に -O3 を決め打ちで足すのをやめさせる。
+    sed -i.orig '/-O3/s/[[:graph:]]/#&/' lib/Makefile &&
+
+    # 静的ライブラリをインストールしない。
+    sed -i '/^install:/s/install-static[[:blank:]]*//' lib/Makefile &&
+
+    # コマンドは共有ライブラリをリンクする。
+    sed -i.orig '/^zstd-release:/s/[[:blank:]]zstd$/&-dll/' programs/Makefile
+}
+
+_config () {
+    :
+}
+
+_build () {
+    # CFLAGS は Makefile によって加工される。希望の値で
+    # 加工結果を上書きするのではなく，加工前の初期値として
+    # 与える。
+
+    # HAVE_ZLIB=0 HAVE_LZMA=0 は .gz や .xz／.lzma の
+    # サポートを切る。.zst だけ扱えればいいだろう。
+
+    CFLAGS="$optflags" make V=1 HAVE_ZLIB=0 HAVE_LZMA=0 "$@"
+}
+
+_test () {
+    CFLAGS="$optflags" make V=1 check "$@" &&
+
+    # コマンド zstd がテスト用につくりなおされてしまうので，
+    # リリース用に戻す。
+    fr_do rm -f \"$blddir\"/programs/zstd &&
+    _build
+}
+
+_install () {
+    make V=1 install prefix="$prefix" "$@"
+}
