@@ -1,0 +1,30 @@
+pkgname=pkg-config
+pkgver=0.29.2
+arcurlbase=https://pkg-config.freedesktop.org/releases/
+
+# 以下 3 つのテストは失敗する：
+# * check-cflags
+# * check-sysroot
+# * check-variable-override
+# システムのヘッダファイルの場所（-I を出力しないパス）
+# を /usr/include と想定しているため。
+
+_config () {
+    # --disable-host-tool は PREFIX/bin/HOST-pkg-config を
+    # インストールしなくなる。
+
+    # --with-internal-glib は GLib がインストールされていない
+    # 環境でも明示が必要。
+
+    # --with-system-*-path= は，ビルドされた pkg-config が，
+    # 指定されたパスについて -I や -L を出力しなくなる。
+
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-host-tool \
+        --with-internal-glib \
+        --with-system-include-path="$prefix"/include \
+        --with-system-library-path="$prefix"/lib \
+        CFLAGS="$optflags"
+}
