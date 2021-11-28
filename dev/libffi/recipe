@@ -7,9 +7,13 @@ _config () {
     # なる。両方とも与えないと文書あり。なお文書ありでインストール
     # されるものは info。
 
+    # --disable-multi-os-directory は，libffi.pc 内のライブラリの
+    # 場所が PREFIX/lib/../lib などのようになるのを防ぐ。
+
     ./configure \
         --prefix="$prefix" \
         --disable-silent-rules \
         --disable-static \
+        --disable-multi-os-directory \
         CFLAGS="$optflags"
 }
