@@ -1,13 +1,8 @@
 pkgname=coreutils
-pkgver=8.32
+pkgver=9.0
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/gnu/coreutils/
 test_deps="perl"
-
-# AArch64 だと ls.c のコンパイルで SYS_getdents がないというエラー。
-# upstream では修正されている（8.31 の版に戻されている）。
-# http://git.savannah.gnu.org/cgit/coreutils.git/commit/?id=10fcb97bd728f09d4a027eddf8ad2900f0819b0a
-# https://lists.gnu.org/archive/html/bug-coreutils/2020-03/msg00005.html
 
 # libcap は ls で capability 情報を持っているファイルに色をつけるのに
 # 使っているだけ。
@@ -24,10 +19,6 @@ test_deps="perl"
 
 # テストは tests/misc/timeout-group と tests/id/zero が失敗する。
 
-_patch () {
-    curl 'http://git.savannah.gnu.org/cgit/coreutils.git/patch/?id=10fcb97bd728f09d4a027eddf8ad2900f0819b0a' | patch -p1
-}
-
 _config () {
     ./configure \
         --prefix="$prefix" \
@@ -36,6 +27,6 @@ _config () {
         --disable-xattr \
         --disable-acl \
         --disable-libcap \
-        --without-gmp \
+        --without-libgmp \
         CFLAGS="$optflags"
 }
