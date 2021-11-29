@@ -2,6 +2,7 @@ pkgname=acl
 pkgver=2.3.1
 arcext=tar.xz
 arcurlbase=https://download.savannah.nongnu.org/releases/acl/
+run_deps=attr
 test_deps=perl
 
 # テストを走らせるにはいろいろ要件がある。ファイルシステムが
