@@ -1,0 +1,33 @@
+pkgname=acl
+pkgver=2.3.1
+arcext=tar.xz
+arcurlbase=https://download.savannah.nongnu.org/releases/acl/
+test_deps=perl
+
+# テストを走らせるにはいろいろ要件がある。ファイルシステムが
+# ACL オプションつきでマウントされていること，ls が ACL を
+# サポートしている（ls -l で + が表示される）こと，ユーザ
+# bin が存在していること。
+
+_patch () {
+    # perl の場所を /usr/bin/perl から変える。
+    if [ "$PERL" ]; then
+        x=$PERL
+    else
+        x=$prefix/bin/perl
+    fi
+
+    sed -i.orig "1s|/usr/bin/perl|$x|" \
+        "$srcdir"/test/run \
+        "$srcdir"/test/sort-getfacl-output
+}
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        --disable-nls \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
