@@ -2,11 +2,11 @@ pkgname=patch
 pkgver=2.7.6
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/patch/
+run_deps=attr
 
 _config () {
     ./configure \
         --prefix="$prefix" \
         --disable-silent-rules \
-        --disable-xattr \
         CFLAGS="$optflags"
 }
