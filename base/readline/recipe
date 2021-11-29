@@ -1,0 +1,17 @@
+pkgname=readline
+pkgver=8.1
+arcurlbase=https://ftpmirror.gnu.org/gnu/readline/
+run_deps=ncurses
+
+_patch () {
+    # バイナリに RPATH を埋め込まない。
+    sed -i.orig 's/-Wl,-rpath,[^[:blank:]]*[[:blank:]]//' support/shobj-conf
+}
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --enable-multibyte \
+        --disable-static \
+        CFLAGS="$optflags"
+}
