@@ -7,6 +7,8 @@ arcurlbase=https://ftpmirror.gnu.org/gawk/
 #
 # MPFR は使わない。使うときっとより高精度の計算ができる。
 
+# テストはロケール en_US.UTF-8 が必要。
+
 _config () {
     ./configure \
         --prefix="$prefix" \
