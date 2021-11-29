@@ -2,6 +2,7 @@ pkgname=coreutils
 pkgver=9.0
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/gnu/coreutils/
+run_deps="attr acl libcap"
 test_deps="perl"
 
 # libcap は ls で capability 情報を持っているファイルに色をつけるのに
@@ -24,9 +25,6 @@ _config () {
         --prefix="$prefix" \
         --disable-silent-rules \
         --disable-nls \
-        --disable-xattr \
-        --disable-acl \
-        --disable-libcap \
         --without-libgmp \
         CFLAGS="$optflags"
 }
