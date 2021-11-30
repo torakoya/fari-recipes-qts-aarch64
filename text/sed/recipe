@@ -2,6 +2,7 @@ pkgname=sed
 pkgver=4.8
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/sed/
+run_deps=acl
 
 _config () {
     ./configure \
@@ -9,6 +10,5 @@ _config () {
         --disable-silent-rules \
         --disable-nls \
         --disable-i18n \
-        --disable-acl \
         CFLAGS="$optflags"
 }

@@ -1,7 +1,7 @@
 pkgname=vim
 pkgver=8.2.3696
 arcurl=https://github.com/vim/vim/archive/refs/tags/v$pkgver.$arcext
-run_deps="ncursesw"
+run_deps="acl ncursesw"
 
 # あまりに頻繁な（パッチひとつごとの）リリースに追従する間隔は
 # どうしよう。Homebrew は 25 ごと。
@@ -27,7 +27,6 @@ _config () {
         --prefix="$prefix" \
         --disable-nls \
         --enable-multibyte \
-        --disable-acl \
         --with-tlib=ncursesw \
         --without-local-dir \
         --with-compiledby=admin \

@@ -1,0 +1,30 @@
+pkgname=attr
+pkgver=2.5.1
+arcext=tar.xz
+arcurlbase=https://download.savannah.nongnu.org/releases/attr/
+test_deps=perl
+
+# テストは trusted 名前空間を操作するので root 権限が必要。
+
+_patch () {
+    # perl の場所を /usr/bin/perl から変える。
+    if [ "$PERL" ]; then
+        x=$PERL
+    else
+        x=$prefix/bin/perl
+    fi
+
+    sed -i.orig "1s|/usr/bin/perl|$x|" \
+        "$srcdir"/test/run \
+        "$srcdir"/test/sort-getfattr-output
+}
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        --disable-nls \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
