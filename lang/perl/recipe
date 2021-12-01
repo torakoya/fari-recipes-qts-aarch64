@@ -1,0 +1,79 @@
+pkgname=perl
+pkgver=5.34.0
+arcext=tar.xz
+arcurlbase=https://www.cpan.org/src/5.0/
+run_deps="bzip2 gdbm zlib"
+
+# テストは以下 3 つは失敗する：
+#
+# * ext/GDBM_File/t/gdbm.t
+# * lib/AnyDBM_File.t
+# * t/op/magic.t
+#
+# t/op/magic.t は BusyBox の ps のコマンドラインオプションが
+# 期待どおりではないため。
+#
+# DBM は gdbm 1.20 での仕様変更が原因らしい：
+#
+# https://bugzilla.redhat.com/show_bug.cgi?id=1974288
+
+_patch () {
+    # extension に RPATH を埋め込むのをやめさせる。
+    sed -i.orig 's/\$ld_run_path_shell.*LD_RUN_PATH/#&/' \
+        cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
+}
+
+_config () {
+    # パラメタ編集は -D は定義，-Axxx=yyy は追加（ほかの操作
+    # もある；Configure -h 参照），-Uxxx= は xxx の値を空に
+    # する，-Uxxx は xxx を未定義にする。
+
+    # -Duseshrplib は libperl を共有ライブラリとする。
+
+    # -Dinc_version_list=none はインストールされている古い
+    # バージョンの Perl のモジュールをいまビルドする Perl に
+    # 使わせない（@INC に含めない）。
+
+    # manXdir は自動算出に失敗して manXdir が空，manXext が
+    # 0 となることがあったので明示する。また，man3ext は 3
+    # ではなく 3pm とする。
+
+    # locincpth，loclibpth はローカルデータの置き場所。
+    # 既定値は典型的な場所。/usr/local とか。
+
+    # glibpth はシステムライブラリの置き場所。既定値は /lib
+    # とか /usr/lib とか。そこを探して見つかった基本的な
+    # ライブラリを勝手にリンクしようとしてしまう。
+
+    # -Wl,--enable-new-dtags は libperl にリンクするバイナリ
+    # （bin/perl）に埋め込む RPATH を RUNPATH に変更する。
+    # libperl は $prefix/lib ではなくさらに深い場所に
+    # インストールされるので，それを探し出せるように RUNPATH
+    # を埋め込む。
+
+    sh Configure -de \
+        -Dprefix="$prefix" \
+        -Duseshrplib \
+        -Dinc_version_list=none \
+        -Dman1dir="$prefix"/share/man/man1 \
+        -Dman1ext=1 \
+        -Dman3dir="$prefix"/share/man/man3 \
+        -Dman3ext=3pm \
+        -Ulocincpth= \
+        -Uloclibpth= \
+        -Uglibpth= \
+        -Accdlflags=-Wl,--enable-new-dtags \
+        -Dusethreads \
+        -Doptimize="$optflags"
+}
+
+_build () {
+    # zlib や libbz2 は同梱のものではなくシステムに
+    # インストールされているものを使わせる。
+
+    BUILD_ZLIB=0 BUILD_BZIP2=0 make "$@"
+}
+
+_test () {
+    make test "$@"
+}
