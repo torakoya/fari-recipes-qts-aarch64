@@ -20,7 +20,19 @@ run_deps="bzip2 gdbm zlib"
 _patch () {
     # extension に RPATH を埋め込むのをやめさせる。
     sed -i.orig 's/\$ld_run_path_shell.*LD_RUN_PATH/#&/' \
-        cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
+        cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm &&
+
+    # いまビルドされたコマンドを叩くときに，いまビルドされた
+    # libperl を LD_PRELOAD に設定するのを抑制する。
+    #
+    # libperl をプリロードすると，/bin/sh などが動かない。
+    # /bin/sh などが使うダイナミックリンカ /lib/ld-linux が，
+    # いまビルドしたバイナリと互換性がないため。
+    #
+    # libperl をリンクするバイナリに埋め込む RPATH を RUNPATH
+    # に変更しているので，LD_PRELOAD は不要。LD_LIBRARY_PATH
+    # だけでいい。
+    sed -i.orig 's|CORE/\$libperl|& \&\& false|' Makefile.SH
 }
 
 _config () {
