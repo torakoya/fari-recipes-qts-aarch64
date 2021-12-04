@@ -83,6 +83,8 @@ _build () {
     # zlib や libbz2 は同梱のものではなくシステムに
     # インストールされているものを使わせる。
 
+    # 隠されているコマンドも見たければ NOECHO= を足す。
+
     BUILD_ZLIB=0 BUILD_BZIP2=0 make "$@"
 }
 
