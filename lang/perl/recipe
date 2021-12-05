@@ -4,16 +4,15 @@ arcext=tar.xz
 arcurlbase=https://www.cpan.org/src/5.0/
 run_deps="bzip2 gdbm zlib"
 
-# テストは以下 3 つは失敗する：
+# テストは以下 2 つは失敗する：
 #
 # * ext/GDBM_File/t/gdbm.t
-# * lib/AnyDBM_File.t
 # * t/op/magic.t
 #
 # t/op/magic.t は BusyBox の ps のコマンドラインオプションが
 # 期待どおりではないため。
 #
-# DBM は gdbm 1.20 での仕様変更が原因らしい：
+# GDBM_File は gdbm 1.20 での仕様変更が原因らしい：
 #
 # https://bugzilla.redhat.com/show_bug.cgi?id=1974288
 
