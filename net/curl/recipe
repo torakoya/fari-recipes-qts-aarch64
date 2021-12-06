@@ -2,7 +2,7 @@ pkgname=curl
 pkgver=7.80.0
 arcext=tar.xz
 arcurlbase=https://curl.se/download/
-run_deps="libidn2 nghttp2 openssl zlib"
+run_deps="libidn2 nghttp2 openssl zlib zstd"
 
 _config () {
     ./configure \
