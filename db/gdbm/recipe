@@ -3,8 +3,9 @@ pkgver=1.22
 arcurlbase=https://ftpmirror.gnu.org/gdbm/
 run_deps="ncurses readline"
 
-# dbm やndbm の互換 API，libgdbm_compat はインストールしない。
-# インストールするには --enable-libgdbm-compat。
+# --enable-libgdbm-compat は dbm やndbm の互換 API である
+# libgdbm_compat をインストールする。ndbm がもっとも汎用的な
+# DBM のようだ。
 
 # readline は bin/gdbmtool が使う。必要だろうか。とりあえず使わせた。
 
