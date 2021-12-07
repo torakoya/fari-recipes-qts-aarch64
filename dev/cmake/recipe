@@ -2,7 +2,7 @@ pkgname=cmake
 pkgver=3.22.0
 arcurlbase=https://github.com/Kitware/CMake/releases/download/v$pkgver/
 
-run_deps="bzip2 curl expat xz zlib"
+run_deps="bzip2 curl expat ncurses xz zlib"
 
 blddir=$workdir/objdir
 
@@ -48,7 +48,7 @@ _config () {
 
     # 必要なライブラリはすべて同梱されている。システムにインストール
     # 済みのものはそちらを使うようにした。すべて入れたら --system-libs
-    # だけ指定すればよさそう。なお同梱のライブラリは 3 つつくられる
+    # だけ指定すればよさそう。なお同梱のライブラリは 4 つつくられる
     # 実行可能ファイルそれぞれに静的にリンクされるのでサイズが気になる
     # かもしれない。
 
@@ -80,6 +80,7 @@ _config () {
         CXXFLAGS="$optflags" \
         -- \
         -D CMAKE_SYSTEM_PREFIX_PATH="$prefix" \
+        -D CURSES_NEED_WIDE=1 \
         -D CMAKE_C_FLAGS= \
         -D CMAKE_CXX_FLAGS= \
         -D CMAKE_C_FLAGS_RELEASE="$optflags -DNDEBUG" \
