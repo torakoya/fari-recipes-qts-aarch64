@@ -35,6 +35,15 @@ _build () {
 }
 
 _test () {
+    LD_LIBRARY_PATH=\
+"$blddir"/libavcodec:\
+"$blddir"/libavdevice:\
+"$blddir"/libavfilter:\
+"$blddir"/libavformat:\
+"$blddir"/libavutil:\
+"$blddir"/libpostproc:\
+"$blddir"/libswresample:\
+"$blddir"/libswscale \
     make check V=1 "$@"
 }
 
