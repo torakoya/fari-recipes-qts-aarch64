@@ -1,0 +1,28 @@
+pkgname=sqlite
+pkgver=3.37.0
+arcname=sqlite-autoconf
+srcname=$arcname-3370000
+arcfile=$srcname.$arcext
+arcurlbase=https://www.sqlite.org/2021/
+run_deps="ncurses readline zlib"
+
+_config () {
+    # SQLITE_ENABLE_COLUMN_METADATA はたしか Rails で必要に
+    # なった。
+    #
+    # そのほかのオプション：
+    #
+    # https://www.sqlite.org/compile.html
+
+    # --disable-static-shell は bin/sqlite3 に libsqlite3 を
+    # 動的にリンクする。
+
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        --disable-static-shell \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib \
+        CPPFLAGS=-DSQLITE_ENABLE_COLUMN_METADATA
+}
