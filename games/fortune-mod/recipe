@@ -29,5 +29,6 @@ _config () {
         -DCMAKE_VERBOSE_MAKEFILE=1 \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_C_FLAGS_RELEASE="$optflags -DNDEBUG" \
+        -DCMAKE_SKIP_RPATH=1 \
         "$srcdir"
 }
