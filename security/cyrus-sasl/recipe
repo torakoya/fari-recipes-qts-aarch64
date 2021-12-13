@@ -1,0 +1,27 @@
+pkgname=cyrus-sasl
+pkgver=2.1.27
+arcurlbase=https://github.com/cyrusimap/cyrus-sasl/releases/download/cyrus-sasl-$pkgver/
+run_deps="openssl"
+
+# Mutt で SMTP 認証を利用するために，クライアントだけ入れる。
+
+_patch () {
+    # --with-dblib=none すると pluginviewer.8 がインストール
+    # されなくなるが，欲しい。
+    sed -i.orig \
+        '/^@NO_SASL_DB_MANS_TRUE@man_MANS =/s/$/pluginviewer.8/' \
+        utils/Makefile.in
+}
+
+_config () {
+    # sasldb はクライアントには不要なので --with-dblib=none
+    # を指定する。
+
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --without-saslauthd \
+        --with-dblib=none \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
