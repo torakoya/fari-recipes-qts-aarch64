@@ -1,0 +1,35 @@
+pkgname=mutt
+pkgver=2.1.4
+arcurlbase=http://ftp.mutt.org/pub/mutt/
+run_deps="cyrus-sasl ncurses openssl zlib"
+
+_patch () {
+    # mutt -v に，冗長な gcc -v ではなく gcc --version を
+    # 埋め込む。
+    sed -i.orig '/CC.* -v/s/[^[:blank:]]/#&/' Makefile.in
+}
+
+_config () {
+    # --with-mailpath=/var/mail はエラー回避のため。メール
+    # スプールの位置は --with-homespool[=FILE]（$HOME/FILE；
+    # FILE の既定値は mailbox）か --with-mailpath=DIR
+    # （DIR/$LOGNAME）で指定する。両方とも省略すると，典型的
+    # な --with-mailpath=（/var/mail とか）がいくつか探されて，
+    # いずれも見つからないとエラーになる。QTS はどんなメール
+    # スプールも持たないが，エラー回避のため適当な値を与えて
+    # おく。
+
+    # --with-sasl は SMTP 認証（など）のため。
+
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --enable-pop \
+        --enable-imap \
+        --enable-smtp \
+        --disable-nls \
+        --with-ssl \
+        --with-sasl \
+        --with-mailpath=/var/mail \
+        CFLAGS="$optflags"
+}
