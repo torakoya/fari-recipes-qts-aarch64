@@ -55,6 +55,13 @@ blddir=$workdir/objdir
 # （だからビルドディレクトリ内の Libiberty 生成場所が -L で指定されて
 # いるのだろう），それが指定されているのはまずい。
 
+_patch () {
+    # /etc/ld.so.conf を読まない。
+    sed -i.orig \
+        '/ld\.so\.conf"/,/^$/ { s|{|&/*|; s|}|*/&| }' \
+        ld/ldelf.c
+}
+
 _config () {
     "$srcdir"/configure \
         --prefix="$prefix" \
