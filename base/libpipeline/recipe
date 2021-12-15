@@ -1,0 +1,13 @@
+pkgname=libpipeline
+pkgver=1.5.4
+arcurlbase=https://download.savannah.nongnu.org/releases/libpipeline/
+
+# man-db のメンテナが man-db のためにつくったライブラリ。
+# man-db のためだけにインストールする。
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        CFLAGS="$optflags"
+}
