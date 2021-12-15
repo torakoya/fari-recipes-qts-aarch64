@@ -1,0 +1,38 @@
+pkgname=man-db
+pkgver=2.9.4
+arcext=tar.xz
+arcurlbase=https://download.savannah.nongnu.org/releases/man-db/
+build_deps="pkg-config"
+run_deps="gdbm libpipeline zlib"
+
+_config () {
+    # --disable-setuid は --disable-cache-owner に含まれる
+    # （と補足するくらいなら明示してもいいのだが）。
+
+    # --without-included-regex は同梱の regex ではなく
+    # システムのものを使わせる。--with(out)- をはぶくと
+    # システムの regex が信頼できるかどうかテストされるが，
+    # ひとつのテストに失敗する（"Invalid back reference" で
+    # コンパイルに失敗するはずの regex が glibc 2.28 より前
+    # ではならないというもの；手元の glibc は 2.34 なのだが）。
+    # が，だいたい動くならいいだろう。
+
+    # cat ページは不要なので --disable-cats を指定しても
+    # いいのだが，cat ページサポートのコード量が大きいとか
+    # 依存ライブラリが増えるといったこともないので，まあ
+    # 既定値にまかせる。
+
+    # --enable-new-dtags は，ライブラリが PREFIX/lib/man-db/
+    # に入るので，それにリンクするバイナリに RUNPATH として
+    # 埋め込む。
+
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-nls \
+        --disable-cache-owner \
+        --without-included-regex \
+        CFLAGS="$optflags" \
+        LDFLAGS=-Wl,--enable-new-dtags \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
