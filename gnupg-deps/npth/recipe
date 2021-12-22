@@ -1,0 +1,11 @@
+pkgname=npth
+pkgver=1.6
+arcext=tar.bz2
+arcurlbase=https://gnupg.org/ftp/gcrypt/npth/
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        CFLAGS="$optflags"
+}
