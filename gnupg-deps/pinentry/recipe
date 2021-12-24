@@ -1,0 +1,20 @@
+pkgname=pinentry
+pkgver=1.2.0
+arcext=tar.bz2
+arcurlbase=https://gnupg.org/ftp/gcrypt/pinentry/
+run_deps="libassuan libcap libgpg-error ncurses"
+
+# libcap は mlock(2) のため。
+
+# pinentry-ncurses と pinentry-tty をインストールする。
+# どちらもターミナルで動くが，前者は高級で，色がついたり
+# 文字の入力が "*" で示されたりする。後者は入力がエコー
+# されない。
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --enable-pinentry-tty \
+        CFLAGS="$optflags"
+}

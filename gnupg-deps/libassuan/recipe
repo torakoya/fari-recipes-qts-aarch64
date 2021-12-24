@@ -1,0 +1,19 @@
+pkgname=libassuan
+pkgver=2.5.5
+arcext=tar.bz2
+arcurlbase=https://gnupg.org/ftp/gcrypt/libassuan/
+run_deps="libgpg-error"
+
+_patch () {
+    # RPATH を埋め込まない。
+    sed -i.orig \
+        's@eval "*\([^=]*\).*\$hardcode_libdir_flag_spec@\1=; [ "$libdir" = "'$prefix/lib'" ] || &@' \
+        build-aux/ltmain.sh
+}
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        CFLAGS="$optflags"
+}
