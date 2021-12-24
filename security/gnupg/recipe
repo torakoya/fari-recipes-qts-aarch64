@@ -1,0 +1,24 @@
+pkgname=gnupg
+pkgver=2.3.4
+arcext=tar.bz2
+arcurlbase=https://gnupg.org/ftp/gcrypt/gnupg/
+run_deps="bzip2 libassuan libgcrypt libgpg-error libksba ncurses npth pinentry readline zlib"
+
+# 鍵サーバは利用しない。なお利用するには TLS ライブラリ，
+# ntbTLS か GnuTLS が必要。
+
+# TOFU は使わない。なお使うには SQLite が必要。
+
+_patch () {
+    # help*.txt は英語だけインストールする。
+    sed -i.orig 's/help\.[A-Za-z_]*\.txt//g' doc/Makefile.in
+}
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-nls \
+        --disable-tofu \
+        CFLAGS="$optflags"
+}
