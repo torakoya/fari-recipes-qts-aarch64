@@ -1,0 +1,43 @@
+pkgname=p7zip
+pkgver=17.04
+arcurl=https://github.com/jinfeihan57/p7zip/archive/refs/tags/v$pkgver.$arcext
+
+# コマンドは単一バイナリ（動的ライブラリをインストールしない）
+# の 7za だけインストールする。7z と zip だけ扱えればいいのだが，
+# ほかにもいろいろと扱えてしまう。最小のバイナリ 7zr は 7z しか
+# 扱えない。
+
+# SFX（self-extracting archive）は有効にしない。
+
+_patch () {
+    # SFX のテスト（とそれにともなうビルド）を回避する。
+    sed -i.orig '/^test:/s/[[:blank:]]*sfx//' makefile.common &&
+    sed -i.orig '/7za433_7zip_lzma\.x/,/^$/s/./#&/' check/check_7za.sh &&
+
+    # インストールしないコマンドの man ページをインストールしない。
+    sed -i.orig '/7zr\{0,1\}\.1/s/[^[:blank:]]/#&/' install.sh &&
+
+    # インストールする man ページを gzip しない。
+    sed -i '/^gzip/s/^/#/' install.sh
+}
+
+_config () {
+    # 環境に合った makefile.xxx を makefile.machine にコピーする。
+    cp makefile.linux_any_cpu_gcc_4.X makefile.machine
+}
+
+_build () {
+    make OPTFLAGS="$optflags" "$@"
+}
+
+_test () {
+    make test "$@"
+}
+
+_install () {
+    make install \
+        DEST_HOME="$prefix" \
+        DEST_MAN="$prefix"/share/man \
+        DEST_DIR="$DESTDIR" \
+        "$@"
+}
