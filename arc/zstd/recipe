@@ -1,5 +1,5 @@
 pkgname=zstd
-pkgver=1.5.0
+pkgver=1.5.1
 arcurlbase=https://github.com/facebook/zstd/releases/download/v$pkgver/
 
 # README.md だけでなく lib/README.md や programs/README.md
@@ -7,7 +7,7 @@ arcurlbase=https://github.com/facebook/zstd/releases/download/v$pkgver/
 
 _patch () {
     # CFLAGS に -O3 を決め打ちで足すのをやめさせる。
-    sed -i.orig '/-O3/s/[[:graph:]]/#&/' lib/Makefile &&
+    sed -i.orig '/-O3/s/[[:graph:]]/#&/' lib/libzstd.mk &&
 
     # 静的ライブラリをインストールしない。
     sed -i '/^install:/s/install-static[[:blank:]]*//' lib/Makefile &&
