@@ -1,15 +1,16 @@
 pkgname=ruby
-pkgver=3.0.3
+pkgver=3.1.0
 arcext=tar.xz
 arcurlbase=https://cache.ruby-lang.org/pub/ruby/${pkgver%.*}/
-run_deps="gdbm gmp libffi ncurses openssl readline zlib"
+run_deps="gmp libffi ncurses openssl readline zlib"
 
 # ビルド後，こう始まる出力を（あれば）確認しておく：
 #     *** Following extensions are not compiled:
 
 _patch () {
-    # basictest/test.rb の `...` がライブラリの動的リンクに
-    # 失敗して動かないのを修正する。
+    # テストやインストール中に実行された ruby や miniruby が
+    # シェルコマンドを実行したとき，/bin/sh がライブラリの
+    # 動的リンクに失敗して起動できないのを修正する。
     #
     # いまビルドした libruby.so を LD_PRELOAD に設定した
     # 状態で /bin/sh が叩かれるが，/bin/sh のダイナミック
@@ -21,8 +22,6 @@ _patch () {
     # LD_PRELOAD を設定しなくても LD_LIBRARY_PATH だけでいい。
     #
     # そこで，LD_PRELOAD を設定しないようにする。
-    #
-    # なお，このテストだけおこなうのは make test-basic。
 
     sed -i.orig 's/env.*libruby_so/#&/' tool/runruby.rb
 }
@@ -77,4 +76,23 @@ _test () {
     # https://github.com/ko1/rubyhackchallenge/blob/master/JA/2_mri_structure.md
 
     make V=1 test "$@"
+}
+
+_install () {
+    touch .fr-install-start
+
+    # V=1 は native extension のビルドログを詳細にするため。
+    # 出力は
+    # PREFIX/lib/ruby/gems/VER/extensions/ARCH/VER/GEM/gem_make.out
+    # にある。内容を確認したら削除していい。
+    make V=1 install "$@" || return $?
+
+    find "$DESTDIR$prefix"/lib/ruby/gems -name Makefile -newer .fr-install-start | sed 's|/Makefile$||' | while read dir; do
+        fr_do cd \"$dir\" '&&' make distclean
+    done
+
+    echo Build logs, which you can delete:
+    find "$DESTDIR$prefix"/lib/ruby/gems -name gem_make.out -newer .fr-install-start
+
+    rm -f .fr-install-start
 }
