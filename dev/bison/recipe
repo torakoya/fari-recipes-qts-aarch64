@@ -2,11 +2,15 @@ pkgname=bison
 pkgver=3.8.2
 arcext=tar.lz
 arcurlbase=https://ftpmirror.gnu.org/bison/
-run_deps="readline"
+run_deps="m4 readline"
 
 # --enable-relocatable は指定しない（doc/relocatable.texi）。
 # このプログラムだけリロケータブルになってもしかたがないと思う。
 # なお指定するとサイズがちょっとだけ大きくなる（誤差だが）。
+
+# m4 は configure 時に PATH から見つけ出されたものがフルパスで
+# 埋め込まれる。bison 実行時に変更したければ環境変数 M4 で
+# 指定する。
 
 _config () {
     ./configure \
