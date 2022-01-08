@@ -1,0 +1,32 @@
+pkgname=sudo
+pkgver=1.9.8p2
+arcurlbase=https://www.sudo.ws/dist/
+run_deps="zlib"
+
+# テストは管理者が root であることを想定しているので，admin
+# である QTS では一部が失敗する。
+
+_config () {
+    # 通知は syslog（だけ）を利用する（--with-logging=syslog；
+    # これが既定値）。
+
+    # --without-sendmail はメールを送信しない。
+
+    # --disable-log-server，--disable-log-client は
+    # sudo_logsrvd を使わない。
+
+    # --with-runas-default=admin は QTS では管理者は root
+    # ではなく admin なので。
+
+    ./configure \
+        --prefix="$prefix" \
+        --sysconfdir="$prefix"/etc \
+        --disable-nls \
+        --without-sendmail \
+        --disable-log-server \
+        --disable-log-client \
+        --with-runas-default=admin \
+        --with-tzdir="$prefix"/share/zoneinfo \
+        --with-editor="$prefix"/bin/vi \
+        CFLAGS="$optflags"
+}
