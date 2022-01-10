@@ -1,0 +1,67 @@
+pkgname=bmake
+pkgver=20211221
+srcname=$pkgname
+arcurlbase=http://www.crufty.net/ftp/pub/sjg/
+
+# テストは cmd-interrupt が失敗する。プロセスを kill したときの
+# /bin/sh の挙動の環境差のため。（.SHELL を定義して dash を使うと
+# 合格した。）
+
+_patch () {
+    # インストールされるファイル mk/own.mk 内で定義される
+    # 管理者のユーザ名とグループ名を環境に合わせて修正する。
+    # この値は今回のインストール時にも使われる。
+    sed -i.orig \
+        -e 's/^\(ROOT_GROUP\)?\(=[[:blank:]]*\).*/\1\2'"$(id -ng 0)"'/' \
+        -e 's/^\(BINOWN\)?\(=[[:blank:]]*\).*/\1\2'"$(id -nu 0)"'/' \
+        mk/own.mk &&
+
+    # インストール時にテストをおこなわない。
+    sed -i.orig \
+        '/^op_install/,/^$/s/op_test/#&/' \
+        boot-strap &&
+
+    # cat ページではなく man ページをインストールする。
+    sed -i.orig \
+        's/\(^MANTARGET[[:blank:]]*=[[:blank:]]*\)cat/\1man/' \
+        Makefile
+}
+
+_config () {
+    # --with-default-sys-path= の既定値は $prefix を展開せず
+    # "$prefix/share/mk" になる。そのため今後コマンドを叩く
+    # ときに毎回 prefix= を定義せねばならなくなるので，ここで
+    # $prefix を展開した値を設定しておく。
+
+    ./configure \
+        --prefix="$prefix" \
+        --with-default-sys-path="$prefix"/share/mk \
+        CFLAGS="$optflags"
+}
+
+_build () {
+    # バイナリをビルドするスクリプト make-bootstrap.sh が
+    # 用意されている。make がまだインストールされていない
+    # 場合を想定してのことだろう。デメリットとして，
+    # タイムスタンプを見て必要な作業だけをおこなうというのが
+    # できない。
+    #
+    # ビルド後，テストやインストールではいまビルドした bmake
+    # が使われる（GNU make を叩いても make→boot-strap→
+    # bmake というふうに叩かれる）。
+
+    sh make-bootstrap.sh "$@"
+}
+
+_test () {
+    make test "$@"
+}
+
+_install () {
+    # INSTALL=install は install-sh ではなく install(1) を使う。
+    # 非 BSD では install(1) の代替として用意された install-sh
+    # が使われるが，これは getopt(1) が必要。べつに install(1)
+    # で問題ないようなのでこれを使う。
+
+    make install INSTALL=install "$@"
+}
