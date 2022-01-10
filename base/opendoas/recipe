@@ -1,0 +1,44 @@
+pkgname=opendoas
+pkgver=6.8.1
+arcext=tar.xz
+arcurlbase=https://github.com/Duncaen/OpenDoas/releases/download/v$pkgver/
+
+# doas の移植は GitHub の Duncaen/OpenDoas と slicer69/doas
+# がよく使われているようだ。
+#
+# 前者は各種 Linux ディストロで採用されている。PAM を
+# 使わないという選択ができる。nholstein/OpenDoas のフォーク。
+#
+# 後者は各種 BSD で採用されている。PAM が必須（あるいは
+# OpenBSD なら BSD Authentication が使えそう；というかそれが
+# オリジナルのコード）。vidoas(8) を足すなど独自の改造も
+# する方針のようだ。
+#
+# * https://cvsweb.openbsd.org/src/usr.bin/doas/
+# * https://github.com/Duncaen/OpenDoas
+# * https://github.com/slicer69/doas
+
+_patch () {
+    # 固定の最適化フラグを削除する。
+    sed -i.orig '/CFLAGS:=/s/[[:blank:]]*-O2//' GNUmakefile
+}
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --sysconfdir="$prefix"/etc \
+        --without-pam
+}
+
+_build () {
+    make CFLAGS="$optflags" "$@"
+}
+
+_test () {
+    # テストなし。
+    :
+}
+
+_install () {
+    make install BINOWN="$(id -nu)" BINGRP="$(id -ng)" "$@"
+}
