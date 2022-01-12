@@ -1,0 +1,46 @@
+pkgname=w3m
+pkgver=0.5.3-git20210102
+arcurl=https://github.com/tats/w3m/archive/refs/tags/v$(echo $pkgver | tr - +).$arcext
+run_deps="bdwgc ncurses openssl zlib"
+
+_patch () {
+    # /lib の libnsl や libdl を使わせない。/nonexistent を
+    # 探させる。$prefix/lib を探させてもいい。不要な libdl.a
+    # （空のアーカイブ）を見つけてしまうが。
+    sed -i.orig \
+        's|\(for dir in\) \/lib .*|\1 /nonexistent|' \
+        configure
+
+    # 以下，英語の文書だけインストールする修正。
+    # share/man/{de,ja}/man1/w3m.1 を除く。
+    sed -i.orig \
+        -e '/ja\/man1/d' \
+        -e '/de\/man1/d' \
+        Makefile.in &&
+
+    # share/man/de/man1/w3mman.1 を除く。
+    sed -i.orig \
+        -e 's/\(MAN1_DE_TARGETS[[:blank:]]*=\).*/\1/' \
+        -e 's/\(MAN1_DE_DIR[[:blank:]]*=\).*/\1 $(MAN1_DIR)/' \
+        scripts/w3mman/Makefile.in &&
+
+    # share/w3m/w3mhelp-funcdesc.{de,ja}.pl を除く。
+    sed -i \
+        '/DOCDIRS=/s/[[:blank:]]*doc-[^"[:blank:]]*//g' \
+        configure
+}
+
+_config () {
+    # --enable-image=no はインライン画像のサポートを切る。
+
+    ./configure \
+        --prefix="$prefix" \
+        --disable-nls \
+        --enable-image=no \
+        CFLAGS="$optflags"
+}
+
+_test () {
+    # テストなし。
+    :
+}
