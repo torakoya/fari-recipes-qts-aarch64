@@ -1,0 +1,16 @@
+pkgname=bdwgc
+pkgver=8.0.6
+arcname=gc
+arcurlbase=https://github.com/ivmai/bdwgc/releases/download/v$pkgver/
+
+_config () {
+    # --disable-docs は share/doc/gc（元は doc/）と man
+    # ページがインストールされなくなる。
+
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-docs \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
