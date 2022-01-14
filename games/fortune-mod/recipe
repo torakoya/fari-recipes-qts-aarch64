@@ -2,12 +2,10 @@ pkgname=fortune-mod
 pkgver=3.6.1
 arcext=tar.xz
 arcurlbase=https://github.com/shlomif/fortune-mod/releases/download/fortune-mod-$pkgver/
-build_deps="cmake git"
+build_deps="cmake"
 test_deps="perl"
 
 blddir=$workdir/objdir
-
-# cmake 実行時に rinutils が git clone される。
 
 # データファイルのインストールディレクトリ（LOCALDIR）は fortunes って
 # 複数形なのか。「fortune というプログラムのためのディレクトリ」では
