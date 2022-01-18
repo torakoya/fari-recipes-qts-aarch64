@@ -44,6 +44,25 @@ _config () {
         OPT="$optflags"
 }
 
+_build () {
+    # SETUPTOOLS_USE_DISTUTILS=stdlib はいまビルドしている
+    # Python が持っている distutils を使わせる。既定値
+    # （=local）は，すでにどこかにインストールされている
+    # setuptools に同梱の distutils を使う。その場合，その
+    # distutils（と Python の標準ライブラリ？）に非互換性が
+    # あるとうまく動かない。
+    #
+    # Python インストール中は =stdlib を最初から設定してくれて
+    # いるべきのような気がするけどなあ。というかそもそも
+    # Python のインストール中に外部にインストールされた
+    # モジュールを使うべきでない気がする。
+    #
+    # * https://github.com/pypa/setuptools/issues/3007
+    # * https://github.com/pypa/setuptools/pull/2896
+
+    SETUPTOOLS_USE_DISTUTILS=stdlib make "$@"
+}
+
 _test () {
-    make test
+    SETUPTOOLS_USE_DISTUTILS=stdlib make test
 }
