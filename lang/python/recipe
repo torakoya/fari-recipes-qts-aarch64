@@ -66,3 +66,14 @@ _build () {
 _test () {
     SETUPTOOLS_USE_DISTUTILS=stdlib make test
 }
+
+_install () {
+    # TEST_MODULES=no は Python 本体をテストするモジュールの
+    # インストールを避けるため（Python ユーザがテストを書く
+    # ためのモジュール，unittest や doctest はインストール
+    # される）。configure の --disable-test-modules は
+    # テストモジュールのビルドも回避されて make test が
+    # 動かなくなるのでダメ。
+
+    make install TEST_MODULES=no "$@"
+}
