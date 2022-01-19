@@ -1,5 +1,5 @@
 pkgname=bmake
-pkgver=20211221
+pkgver=20220116
 srcname=$pkgname
 arcurlbase=http://www.crufty.net/ftp/pub/sjg/
 
