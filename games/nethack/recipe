@@ -1,0 +1,145 @@
+pkgname=nethack
+pkgver=3.6.6
+arcext=tgz
+arcfile=$pkgname-$(echo $pkgver | tr -d .)-src.$arcext
+arcurlbase=https://www.nethack.org/download/$pkgver/
+srcname=NetHack-NetHack-${pkgver}_Released
+run_deps="ncurses"
+
+# setuid するユーザ。~/.nethackrc を読めなくなる可能性も
+# 検討して決めること。
+: "${gameuid:=games}"
+: "${gamegrp:=bin}"
+
+# インストール方法は sys/unix/Install.unx。公式配布の Linux
+# バイナリのビルド方法 sys/unix/README.linux も参考になる。
+#
+# ビルドの設定のヒントファイルは sys/unix/hints/linux（Linux，
+# TTY，シングルユーザ）を使う。sys/unix/hints/unix（レガシ，
+# マルチユーザ）も参考になるかも。
+#
+# システム全体の設定ファイルの導入（SYSCF／sysconf）とか
+# データファイルを nhdat にまとめる（DLB／data librarian）
+# とかはうれしいのかなあ。
+#
+# インストール先のレイアウトはかんたんに変えられる範囲で
+# だいぶ変えた。あとはデータを lib ではなく share に入れて，
+# その中の実行可能ファイルを libexec に入れるべきかな。
+
+_patch () {
+    # 3.6.6: 最近の glibc の sys/cdefs.h でコンパイルエラー
+    # になるのを修正する。原因は __warn_unused_result__ を
+    # include/tradstdc.h で空にしていること。空にするのを
+    # 無条件にやめさせるよう修正するので，環境によっては
+    # べつの場所で問題が発生するかもしれない。本流では修正
+    # 済み。
+    #
+    # work around ubuntu 20.10 build issue
+    # https://github.com/NetHack/NetHack/commit/1cb5dc04605daa45f1c6a647c17442ed7ff2fe4e
+    sed -i.orig \
+        's|^#define __warn_unused_result__|/*&|' \
+        include/tradstdc.h &&
+
+    sed -i.orig '
+        # GAME が util/Makefile で設定されないが問題ないのかな。
+        # recover が参照する HACKDIR から抜け落ちるので問題が
+        # ありそう。ここで設定しておく。
+        1,/^$/ { /^$/s|^|GAME=nethack| }
+
+        s|^\(PREFIX=\).*|\1'"$prefix"'|
+        s|^\(HACKDIR=\).*|\1$(PREFIX)/lib/$(GAME)|
+        s|^\(SHELLDIR[[:blank:]]*=[[:blank:]]*\).*|\1$(PREFIX)/bin|
+        s|^\(VARDIR[[:blank:]]*=[[:blank:]]*\).*|\1$(PREFIX)/var/lib/$(GAME)|
+
+        s|-g -O|'"$optflags"'|
+
+        # VAR_PLAYGROUND は本来 include/unixconf.h で設定する
+        # ようになっているが，Makefile の変数を使いたいので
+        # ここで設定する。
+        /^CFLAGS=/a\
+CFLAGS+=-I$(PREFIX)/include/ncurses\
+CFLAGS+=-DVAR_PLAYGROUND=\\"$(VARDIR)\\"
+
+        # sysconf のインストール場所の変更と，その場所の
+        # あらかじめの mkdir -p。
+        s|-DSYSCF_FILE=[^ ]*|-DSYSCF_FILE=\\"$(PREFIX)/etc/$(GAME)/sysconf\\"|
+        /^POSTINSTALL=.*sysconf/ {
+            s|=|=mkdir -p $(PREFIX)/etc/$(GAME); |
+            s|$(INSTDIR)|$(PREFIX)/etc/$(GAME)|g
+        }
+
+        /^WINTTYLIB=/s/[[:blank:]]*-ltinfo//
+
+        s|^\(CHOWN=\).*|\1chown|
+        s|^\(CHGRP=\).*|\1chgrp|
+        /^CHGRP=/a\
+GAMEUID=$(shell [ $$(id -u) -ne 0 ] && id -un || echo '$gameuid')\
+GAMEGRP=$(shell [ $$(id -g) -ne 0 ] && id -gn || echo '$gamegrp')
+        s|^\(GAMEPERM[[:blank:]]*=[[:blank:]]*\).*|\104755|
+
+        # gzip を PREFIX/bin/gzip に。execv(3) で呼び出す
+        # （src/files.c）ので PATH は見てくれない。
+        s|"/bin/gzip|"'$prefix'/bin/gzip|
+    ' sys/unix/hints/linux &&
+
+    sed -i.orig \
+        's|^\(LEX[[:blank:]]*=[[:blank:]]*\).*|\1flex|' \
+        sys/unix/Makefile.utl &&
+
+    # col がないので cat で代用。そもそも col でエスケープ
+    # シーケンスを削るべきなのだろうか。COLCMD は Guidebook
+    # の作成に使うのだが，これはエスケープシーケンスが
+    # 残っていたほうがうれしいと思う。Guidebook はユーザが
+    # 手動でひらくもののようなのでページャを選べるし。
+    sed -i.orig \
+        's|^\(COLCMD[[:blank:]]*=[[:blank:]]*\).*|\1cat|' \
+        sys/unix/Makefile.doc
+}
+
+_config () {
+    cd sys/unix && sh setup.sh hints/linux
+}
+
+_build () {
+      make all VERBOSEMAKE=1 "$@"
+}
+
+_test () {
+    # テストなし。
+    :
+}
+
+_install () {
+    prefix2=$DESTDIR$prefix
+
+    # make install は無条件で VARDIR の内容を削除してしまう
+    # ことに注意。
+    if [ -e "$prefix2/var/lib/nethack" ]; then
+        maketarget=update
+        mkdir -p "$prefix2/lib/nethack"
+    else
+        maketarget=install
+    fi
+
+    # PREFIX 変更の影響が bin/nethack 内の HACKDIR= に
+    # 出てしまうことに注意。
+    fr_do make $maketarget PREFIX=\"$prefix2\" &&
+
+    fr_do mkdir -p \"$prefix2\"/share/man/man6 &&
+    fr_do cp $(find doc -type f -name '*.6' \! -name 'fixes*') \"$prefix2\"/share/man/man6 &&
+
+    # Guidebook の公式に想定される置き場所がわからない。Unix
+    # ではプログラムからアクセスされることはないようなので，
+    # 勝手に決めた。
+    fr_do mkdir -p \"$prefix2\"/share/doc/nethack &&
+    fr_do cp doc/Guidebook \"$prefix2\"/share/doc/nethack
+}
+
+fr_post_files () {
+    # make update でインストールされないものを files から
+    # 除外する。
+    sed -i \
+        -e '/^var\/lib\/nethack\//d' \
+        -e '/^etc\/nethack\//d' \
+        files
+}
