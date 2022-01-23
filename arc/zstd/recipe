@@ -10,7 +10,7 @@ _patch () {
     sed -i.orig '/-O3/s/[[:graph:]]/#&/' lib/libzstd.mk &&
 
     # 静的ライブラリをインストールしない。
-    sed -i '/^install:/s/install-static[[:blank:]]*//' lib/Makefile &&
+    sed -i.orig '/^install:/s/install-static[[:blank:]]*//' lib/Makefile &&
 
     # コマンドは共有ライブラリをリンクする。
     sed -i.orig '/^zstd-release:/s/[[:blank:]]zstd$/&-dll/' programs/Makefile
