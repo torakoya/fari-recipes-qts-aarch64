@@ -1,0 +1,49 @@
+pkgname=jq
+pkgver=1.6
+arcurlbase=https://github.com/stedolan/jq/releases/download/jq-$pkgver/
+
+_config () {
+    # --disable-maintainer-mode: Makefile にメンテナ向けの
+    # ルールを含めない。
+
+    # --without-oniguruma: 鬼車は使わない。使わないと正規表現が
+    # まったく使えなくなる。鬼車を使うソフトウェアをほかに
+    # インストールしていないから鬼車はインストールしていない。
+    # とりあえず鬼車なしでビルドする。
+    #
+    # 鬼車を使う場合で，jq と同時にビルドするときは，jq を
+    # git clone して git submodule update して autoreconf する
+    # （README 参照）か，鬼車のリリース物を modules/oniguruma
+    # に置く。なおその場合，静的リンクしたとしても鬼車の
+    # ライブラリやヘッダもインストールされるようだ。
+
+    # --disable-docs: man ページを（再）ビルドしない。プリビルド
+    # されたものが同梱されているのでビルドは不要。ビルドには
+    # Ruby が必要。公式ウェブサイトをつくるための要件も含まれて
+    # いるので準備が重い。
+
+    # --disable-shared: libjq の共有ライブラリはつくらない。
+    # libjq はほかのソフトウェアで使わないし，このソフトウェアの
+    # なかで libjq にリンクするバイナリは bin/jq ひとつだけなので
+    # 静的リンクでもサイズは気にならない。
+
+    # テストは Valgrind が必要。なくても実行できるが一部のテスト
+    # が実行されないのかもしれない。まあ Valgrind で実行される
+    # たぐいのテストなら jq では実施しなくてもまだいいか。
+    #
+    # テストは鬼車のテストが失敗する。
+
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-maintainer-mode \
+        --disable-shared \
+        --disable-docs \
+        --without-oniguruma \
+        CFLAGS="$optflags"
+}
+
+_install () {
+    # libjq のライブラリとヘッダのインストールを回避する。
+    make install lib_LTLIBRARIES= include_HEADERS= "$@"
+}
