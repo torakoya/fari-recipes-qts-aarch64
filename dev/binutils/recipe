@@ -56,6 +56,17 @@ blddir=$workdir/objdir
 # いるのだろう），それが指定されているのはまずい。
 
 _patch () {
+    # 2.37: man ページを生成する仕組みに問題があり，同梱の
+    # man ページが空になっている。スクリプトを修正し，また
+    # 同梱の man ページを削除することで，ビルド時に man
+    # ページを再生成する。
+    #
+    # https://sourceware.org/bugzilla/show_bug.cgi?id=28144
+    sed -i.orig \
+        '/\/^-\//s|}|} elsif (/^--no-split$/) { }|' \
+        etc/texi2pod.pl &&
+    find . -type f -size 0 \( -name '*.1' -o -name '*.man' \) -delete &&
+
     # /etc/ld.so.conf を読まない。
     sed -i.orig \
         '/ld\.so\.conf"/,/^$/ { s|{|&/*|; s|}|*/&| }' \
