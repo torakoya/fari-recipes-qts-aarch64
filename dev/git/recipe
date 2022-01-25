@@ -2,7 +2,7 @@ pkgname=git
 pkgver=2.34.1
 arcext=tar.xz
 arcurlbase=https://www.kernel.org/pub/software/scm/git/
-run_deps="curl expat pcre2 openssh openssl perl zlib"
+run_deps="curl expat pcre2 openssh perl zlib"
 
 # man ページは生成に AsciiDoc と xmlto が必要。このためだけに
 # 入れたくないので git-manpages なる配布物を別途入れる。
