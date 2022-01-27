@@ -1,5 +1,5 @@
 pkgname=w3m
-pkgver=0.5.3-git20210102
+pkgver=0.5.3-git20210102-deb11u0.5
 arcurl=https://github.com/tats/w3m/archive/refs/tags/v$(echo $pkgver | tr - +).$arcext
 run_deps="bdwgc ncurses openssl zlib"
 
