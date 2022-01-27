@@ -1,5 +1,5 @@
 pkgname=opendoas
-pkgver=6.8.1
+pkgver=6.8.2
 arcext=tar.xz
 arcurlbase=https://github.com/Duncaen/OpenDoas/releases/download/v$pkgver/
 
