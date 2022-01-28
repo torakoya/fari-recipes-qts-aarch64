@@ -1,5 +1,5 @@
 pkgname=libgpg-error
-pkgver=1.43
+pkgver=1.44
 arcext=tar.bz2
 arcurlbase=https://gnupg.org/ftp/gcrypt/libgpg-error/
 
