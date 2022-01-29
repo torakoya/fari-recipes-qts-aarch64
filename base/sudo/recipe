@@ -30,3 +30,10 @@ _config () {
         --with-editor="$prefix"/bin/vi \
         CFLAGS="$optflags"
 }
+
+_install () {
+    make install \
+        install_uid=$(id -u) \
+        install_gid=$(id -g) \
+        "$@"
+}
