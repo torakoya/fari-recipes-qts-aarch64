@@ -1,0 +1,45 @@
+pkgname=procps
+pkgver=3.3.17
+arcext=tar.xz
+arcfile=procps-ng-$pkgver.$arcext
+arcurlbase=https://downloads.sourceforge.net/project/procps-ng/Production/
+run_deps="ncursesw"
+
+_patch () {
+    # uptime をインストールしない。Coreutils がインストール
+    # しているので。
+    sed -i.orig \
+        -e '/^@.*@bin_PROGRAMS/,/^@.*@[^[:blank:]]/s/[[:blank:]]*uptime\$(EXEEXT)//' \
+        -e 's/[[:blank:]]*uptime\.1//' \
+        Makefile.in
+
+    # 英語以外の man ページをインストールしない。
+    sed -i \
+        '/^SUBDIRS/,/^$/ { /man-po/d }' \
+        Makefile.in
+}
+
+_config () {
+    # --disable-kill: kill は Coreutils のものを使う。
+
+    # --disable-modern-top: オリジナルの見た目に戻す。個人の
+    # 趣味。
+
+    # --enable-watch8bit: watch で 8 ビット文字が表示される
+    # ようにする。
+
+    # CPPFLAGS=...: slabtop と top のコンパイルに ncurses の
+    # ためのフラグが使われないのでここで与える。
+
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-nls \
+        --disable-static \
+        --disable-kill \
+        --disable-modern-top \
+        --enable-watch8bit \
+        CPPFLAGS="$(pkg-config --cflags ncurses)" \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
