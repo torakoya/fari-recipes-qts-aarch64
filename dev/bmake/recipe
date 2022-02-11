@@ -1,11 +1,9 @@
 pkgname=bmake
-pkgver=20220116
+pkgver=20220208
 srcname=$pkgname
 arcurlbase=http://www.crufty.net/ftp/pub/sjg/
 
-# テストは cmd-interrupt が失敗する。プロセスを kill したときの
-# /bin/sh の挙動の環境差のため。（.SHELL を定義して dash を使うと
-# 合格した。）
+# テストは deptgt-interrupt が失敗する。
 
 _patch () {
     # インストールされるファイル mk/own.mk 内で定義される
