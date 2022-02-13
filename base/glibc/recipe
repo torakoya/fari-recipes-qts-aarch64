@@ -1,0 +1,59 @@
+pkgname=glibc
+pkgver=2.35
+arcext=tar.xz
+arcurlbase=https://ftpmirror.gnu.org/libc/
+blddir=$workdir/objdir
+
+# 一部のライブラリは静的ライブラリが入る。動的ライブラリだけ入れる
+# 方針だが glibc の静的ライブラリは何かのときに役に立つかも。
+
+_patch () {
+    # LFS のマネをして $prefix/var のレイアウトを変える。
+    curl -L https://www.linuxfromscratch.org/patches/lfs/development/glibc-2.35-fhs-1.patch | patch -p1 &&
+
+    # share/locale/locale.alias を入れない。
+    sed -i.orig '/^install-others\s*=/s/=.*/=/' intl/Makefile &&
+
+    # share/locale/ に message catalog を入れない。
+    sed -i.orig '/^ALL_LINGUAS\s*:=/s/:=.*/:=/' po/Makefile &&
+
+    # RPATH ではなく RUNPATH に $ORIGIN を埋め込む。
+    # （PREFIX/lib/gconv/*.so；configure 時の LDFLAGS= では
+    # 届かなかった。）
+    sed -i.orig \
+        '/^LDFLAGS-rpath-ORIGIN/s/$/ -Wl,--enable-new-dtags/' \
+        Makeconfig &&
+
+    # UTF-8-CJK を作成するスクリプト utf8cjk_gen.py を作成する。
+    sed '/match/s/WF/WFA/; /open/s/UTF-8/UTF-8-CJK/' \
+        localedata/unicode-gen/utf8_gen.py > \
+        localedata/unicode-gen/utf8cjk_gen.py &&
+
+    # make UTF-8 をマネして make UTF-8-CJK とできるようにする。
+    sed -i.orig \
+        '/^UTF-8:/,/^$/ { H; s/UTF-8/UTF-8-CJK/; s/utf8_gen\.py/utf8cjk_gen.py/; /^$/g }' \
+        localedata/unicode-gen/Makefile
+}
+
+_config () {
+    # LFS の libc_cv_slibdir=/lib は $prefix が /usr でなければ不要
+    # （sysdeps/unix/sysv/linux/aarch64/configure を参照）。
+
+    "$srcdir"/configure \
+        --prefix="$prefix" \
+        CFLAGS="$optflags"
+}
+
+# ambiguous width な文字の幅を 2 にした charmap，UTF-8-CJK をつくる。
+_fr_utf8cjk () {
+    fr_do cd \"$srcdir\"/localedata/unicode-gen '&&' make UTF-8-CJK
+}
+
+# UTF-8-CJK を（なければつくって）インストールする。
+#
+# この charmap を使う日本語ロケール ja_JP.UTF-8 をつくるにはこうする：
+#
+# # localedef -i ja_JP -f UTF-8-CJK ja_JP.UTF-8
+_fr_utf8cjk_install () {
+    _fr_utf8cjk && fr_do gzip -9nc \"$srcdir\"/localedata/unicode-gen/UTF-8-CJK \> \"$DESTDIR$prefix\"/share/i18n/charmaps/UTF-8-CJK.gz
+}
