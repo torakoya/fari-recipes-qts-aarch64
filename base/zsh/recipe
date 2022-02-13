@@ -1,5 +1,5 @@
 pkgname=zsh
-pkgver=5.8
+pkgver=5.8.1
 arcext=tar.xz
 arcurlbase=https://downloads.sourceforge.net/project/zsh/zsh/$pkgver/
 run_deps=ncursesw
