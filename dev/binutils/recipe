@@ -1,5 +1,5 @@
 pkgname=binutils
-pkgver=2.37
+pkgver=2.38
 arcext=tar.lz
 arcurlbase=https://ftpmirror.gnu.org/binutils/
 blddir=$workdir/objdir
@@ -37,6 +37,11 @@ blddir=$workdir/objdir
 # tooldir= は指定しないと一部のコマンドと ldscripts が $prefix/TARGET
 # に入る。
 
+# gold_cv_lib_static=no は gold のテストで libstdc++.a がインストール
+# されていないのにリンクしようとしてエラーになるのを避けるため。
+# この変数の値は configure で自動検出されるが，C++ ではなく C のソース
+# を静的ビルドできるかどうかで決めてしまう。
+
 # ビルドされた ld のライブラリのサーチパスの既定値が期待どおりに設定
 # されているかどうか確認するには，ld --verbose | grep SEARCH_DIR。
 # gold ではどうすればいいんだろう。
@@ -56,17 +61,6 @@ blddir=$workdir/objdir
 # いるのだろう），それが指定されているのはまずい。
 
 _patch () {
-    # 2.37: man ページを生成する仕組みに問題があり，同梱の
-    # man ページが空になっている。スクリプトを修正し，また
-    # 同梱の man ページを削除することで，ビルド時に man
-    # ページを再生成する。
-    #
-    # https://sourceware.org/bugzilla/show_bug.cgi?id=28144
-    sed -i.orig \
-        '/\/^-\//s|}|} elsif (/^--no-split$/) { }|' \
-        etc/texi2pod.pl &&
-    find . -type f -size 0 \( -name '*.1' -o -name '*.man' \) -delete &&
-
     # /etc/ld.so.conf を読まない。
     sed -i.orig \
         '/ld\.so\.conf"/,/^$/ { s|{|&/*|; s|}|*/&| }' \
@@ -76,6 +70,7 @@ _patch () {
 _config () {
     "$srcdir"/configure \
         --prefix="$prefix" \
+        --disable-silent-rules \
         --with-system-zlib \
         --enable-gold \
         --enable-ld=default \
@@ -93,6 +88,7 @@ _config () {
 _build () {
     lt_cv_sys_lib_dlsearch_path_spec="$prefix"/lib \
     LEXLIB= \
+    gold_cv_lib_static=no \
     make tooldir="$prefix" "$@"
 }
 
