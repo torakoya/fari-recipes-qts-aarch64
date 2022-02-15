@@ -1,0 +1,24 @@
+pkgname=bc-gh
+pkgver=5.2.2
+arcname=bc
+arcext=tar.xz
+arcurlbase=https://github.com/gavinhoward/bc/releases/download/$pkgver/
+
+# bc の実装のひとつ。POSIX 準拠で GNU bc の拡張を持っていて
+# GNU bc より高速らしい。
+#
+# bc-gh という名前は作者の提案（README.md）。
+
+_config () {
+    # CC: 既定値は c99；うちには存在しない。
+
+    # --disable-generated-tests: GNU bc（と互換の bc）を要求
+    # するテストを実施しない。
+
+    CC=cc \
+    CFLAGS="$optflags" \
+    ./configure \
+        --prefix="$prefix" \
+        --disable-nls \
+        --disable-generated-tests
+}
