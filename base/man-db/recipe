@@ -1,5 +1,5 @@
 pkgname=man-db
-pkgver=2.9.4
+pkgver=2.10.1
 arcext=tar.xz
 arcurlbase=https://download.savannah.nongnu.org/releases/man-db/
 build_deps="pkg-config"
@@ -12,10 +12,8 @@ _config () {
     # --without-included-regex は同梱の regex ではなく
     # システムのものを使わせる。--with(out)- をはぶくと
     # システムの regex が信頼できるかどうかテストされるが，
-    # ひとつのテストに失敗する（"Invalid back reference" で
-    # コンパイルに失敗するはずの regex が glibc 2.28 より前
-    # ではならないというもの；手元の glibc は 2.34 なのだが）。
-    # が，だいたい動くならいいだろう。
+    # まあ man の検索で使う正規表現などだいたい動けば
+    # いいだろう。
 
     # cat ページは不要なので --disable-cats を指定しても
     # いいのだが，cat ページサポートのコード量が大きいとか
