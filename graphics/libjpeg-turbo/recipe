@@ -1,0 +1,59 @@
+pkgname=libjpeg-turbo
+pkgver=2.1.2
+arcurlbase=https://downloads.sourceforge.net/project/libjpeg-turbo/$pkgver/
+build_deps="cmake"
+
+blddir=$workdir/objdir
+
+# AArch64 でも IJG JPEG より速くなる。
+
+# ビルド方法は BUILDING.md。
+
+_patch () {
+    # lib/pkgconfig/libturbojpeg.pc をインストールしない。
+    # WITH_TURBOJPEG=0 でもインストールされてしまう。
+    sed -i.orig '/libturbojpeg\.pc/d' CMakeLists.txt
+}
+
+_config () {
+    # CMAKE_INSTALL_LIBDIR=: 既定値は lib64。
+
+    # CMAKE_SKIP_INSTALL_RPATH=1: RPATH を埋め込まない。
+    # CMAKE_SKIP_RPATH=1 は make test でエラーになる。
+
+    # WITH_TURBOJPEG=0: libturbojpeg をインストールしない。
+
+    # WITH_JPEG8=1: libjpeg の API を IJG JPEG のバージョン
+    # 8 互換にする。既定値では 6b。README.md に詳細。6 の
+    # ままでも，7 や 8 で追加された機能は（サポートできる
+    # ものは？）サポートされるようだ。cjpeg の -rgb とか。
+    # 7 や 8 向けにビルドされた既存のプログラムをそのまま
+    # 動かしたいという場合でなければ，7 や 8 互換にする
+    # メリットは薄いのかもしれない。まあ 8 互換にする
+    # デメリットもなさそうなので 8 にしておく。
+
+    # CMAKE_C_FLAGS= など 3 種: CMAKE_C_FLAGS_RELEASE に
+    # "$optflags -DNDEBUG" を与えたいのだが，この中の -O2 は
+    # -O3 に置換されてしまうので，変則的な与えかたをしておく。
+
+    cmake \
+        -G'Unix Makefiles' \
+        -DCMAKE_INSTALL_PREFIX="$prefix" \
+        -DCMAKE_INSTALL_LIBDIR:PATH=lib \
+        -DENABLE_STATIC=0 \
+        -DCMAKE_SKIP_INSTALL_RPATH=1 \
+        -DWITH_TURBOJPEG=0 \
+        -DWITH_JPEG8=1 \
+        -DCMAKE_C_FLAGS="$optflags" \
+        -DCMAKE_C_FLAGS_RELEASE=-DNDEBUG \
+        -DCMAKE_ASM_FLAGS_RELEASE=-DNDEBUG \
+        "$srcdir"
+}
+
+_build () {
+    make VERBOSE=1 "$@"
+}
+
+_test () {
+    make test "$@"
+}
