@@ -1,0 +1,48 @@
+pkgname=libpng
+pkgver=1.6.37
+arcext=tar.xz
+arcurlbase=https://downloads.sourceforge.net/project/libpng/libpng16/$pkgver/
+run_deps="zlib"
+
+# contrib/pngminus のコマンド png2pnm と pnm2png も
+# インストールする。
+
+_config () {
+    # --enable-hardware-optimizations/--enable-arm-neon:
+    # yes か no にすると config.h に NEON を使用するか否かが
+    # 定義される。省略すると定義されず，そうすると pngpriv.h
+    # 内でコンパイル時に自動判別されるようだ。
+    #
+    # yes にすると，無条件に最適化をしたければコンパイラに
+    # -mfpu=neon を渡せと警告されるが，これは AArch64 では
+    # 不要（NEON はつねに有効）。
+    #
+    # NEON を使った実装は arm/ にある。ただし PNG の展開だけ。
+    # またアセンブリでの実装 *.S は 32 ビット ARM 用だけ。
+    # NEON intrinsics での実装 *_intrinsics.c は 64 ビット
+    # ARM にも対応している。
+
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
+
+_build () {
+    make "$@" &&
+
+    fr_do make -C contrib/pngminus \
+        PNGLIB_SHARED=\'-L../../.libs -lpng16\' \
+        ZLIB_SHARED= \
+        CFLAGS=\"$optflags\" \
+        png2pnm pnm2png
+}
+
+_install () {
+    make install "$@" &&
+
+    fr_do install contrib/pngminus/png2pnm \"$DESTDIR$prefix\"/bin &&
+    fr_do install contrib/pngminus/pnm2png \"$DESTDIR$prefix\"/bin
+}
