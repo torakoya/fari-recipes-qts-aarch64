@@ -1,0 +1,21 @@
+pkgname=libtiff
+pkgver=4.3.0
+arcname=tiff
+arcurlbase=https://download.osgeo.org/libtiff/
+run_deps="libjpeg xz zlib zstd"
+
+_patch () {
+    # html/ の中身をインストールしない。内容はたぶん公式
+    # サイトと man ページの HTML 版。
+    sed -i.orig '/^SUBDIRS/s/[[:blank:]]*html//' Makefile.in
+}
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        --disable-cxx \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
