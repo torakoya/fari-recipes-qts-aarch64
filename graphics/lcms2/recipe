@@ -1,0 +1,13 @@
+pkgname=lcms2
+pkgver=2.13.1
+arcurlbase=https://downloads.sourceforge.net/project/lcms/lcms/$(echo $pkgver | cut -d. -f1,2)/
+run_deps="libjpeg libtiff zlib"
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
