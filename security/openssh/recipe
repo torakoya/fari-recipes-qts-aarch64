@@ -8,8 +8,9 @@ run_deps="openssl zlib"
 # --with-privsep-user='[sshd]' は QTS の /etc/passwd を見るといかにも
 # このユーザという感じなので。
 
-# --with-mantype=man は nroff が入っていないと man page ではなく cat page が
-# インストールされてしまうのを避けるため。
+# --with-mantype=man は man ページを man 形式にする。省略すると mdoc
+# 形式，man 形式，cat ページの順にシステムの mandoc や nroff が対応
+# しているかどうか調べられる。
 
 # PID 置き場は /var/run；変更したければ --with-pid-dir= で。
 
