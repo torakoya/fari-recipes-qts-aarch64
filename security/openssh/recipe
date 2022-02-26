@@ -1,5 +1,5 @@
 pkgname=openssh
-pkgver=8.8p1
+pkgver=8.9p1
 arcurlbase=https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/
 run_deps="openssl zlib"
 
@@ -18,8 +18,6 @@ run_deps="openssl zlib"
 
 # --with-default-path= はこの sshd にログインした後の PATH の既定値。
 # 指定しないと /usr/bin:/bin:/usr/sbin:/sbin:$prefix/bin になる。
-
-# make tests は一部失敗する。すべて成功させるのはむずかしいかも。
 
 _config () {
     ./configure \
