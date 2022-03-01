@@ -1,5 +1,5 @@
 pkgname=wget
-pkgver=1.21.2
+pkgver=1.21.3
 arcext=tar.lz
 arcurlbase=https://ftpmirror.gnu.org/wget/
 run_deps="libidn2 openssl zlib"
@@ -22,6 +22,9 @@ test_deps="perl"
 # regex は問題ありとしてはねられたが，まあだいたい動けばいいや，
 # ほかのプログラムもそれを使っているんだし，という判断で使う。
 # ちなみにシステムのを使うとバイナリが 14％小さくなった（wget 1.21.1）。
+#
+# wget 1.21.3＋glibc 2.35 では合格した。でもこのオプションは
+# 残しておく。
 
 # --without-libpsl は警告を抑制するため。libpsl はあるとうれしいのかな。
 
