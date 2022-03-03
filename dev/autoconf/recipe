@@ -1,0 +1,10 @@
+pkgname=autoconf
+pkgver=2.71
+arcext=tar.xz
+arcurlbase=https://ftpmirror.gnu.org/autoconf/
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules
+}
