@@ -1,0 +1,41 @@
+pkgname=miscfiles
+pkgver=1.5
+arcurlbase=https://ftpmirror.gnu.org/miscfiles/
+
+# PREFIX/share/misc にインストールし，そのうち web2 への
+# シンボリックリンクを PREFIX/share/dict/words に置く。
+#
+# 何を share/dict に置いて何を share/misc に置くかは各種 BSD
+# や Linux ディストロによってまちまち。みんな共通して web2，
+# web2a（，words）は share/dict に置いているかな。
+#
+# FHS 3.0 では /usr/share/dict には各言語のワードリストだけ
+# を置くとしている。
+#
+# * https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch04s11.html#usrsharedictWordLists
+# * https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch04s11.html#usrsharemiscMiscellaneousArchitecture
+#
+# ほか share/dict に置かれることがあるものは connectives，
+# propernames。
+
+# dict/ の中身を gzip するディストロがあるけど問題ないのかな。
+# Gentoo は gzip するオプションがあり，web2 を web2.gz と
+# する。それへのシンボリックリンクは words.gz ではなく words。
+# Debian は web2 はそのまま残しほかを gzip する。words は
+# 用意しないようだ。
+#
+# とりあえず bsdgames の boggle（boggle/mkdict）は gzip を
+# 考慮していなさそう（Makefile 内のコマンドラインを修正する
+# だけだが）。うちは gzip はやめておくか。
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --datadir="$prefix"/share/misc
+}
+
+_install () {
+    make install "$@" &&
+    fr_do mkdir -p \"$DESTDIR$prefix\"/share/dict &&
+    fr_do ln -sf ../misc/web2 \"$DESTDIR$prefix\"/share/dict/words
+}
