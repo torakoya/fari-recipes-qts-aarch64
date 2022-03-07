@@ -1,0 +1,11 @@
+pkgname=automake
+pkgver=1.16.5
+arcext=tar.xz
+arcurlbase=https://ftpmirror.gnu.org/automake/
+build_deps="autoconf"
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules
+}
