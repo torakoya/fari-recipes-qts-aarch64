@@ -1,5 +1,5 @@
 pkgname=whois
-pkgver=5.5.11
+pkgver=5.5.12
 arcext=tar.xz
 arcfile=${pkgname}_$pkgver.$arcext
 srcname=$pkgname
@@ -7,8 +7,8 @@ arcurlbase=http://deb.debian.org/debian/pool/main/w/whois/
 run_deps="libidn2"
 
 # この whois は日本の WHOIS サーバへの問い合わせに特別な手が
-# 入れてある。LC_MESSAGE（LC_MESSAGES ではなく）か LANG の
-# 先頭が "ja" でなければ返答から日本語が抑制される。
+# 入れてある。LC_MESSAGES か LANG の先頭が "ja" でなければ
+# 返答から日本語が抑制される。
 
 # ビルド手順の説明はなさそう。まあビルドに使いそうなものは
 # Makefile くらいしか見当たらないので make すればいいのだろう。
