@@ -1,0 +1,15 @@
+pkgname=libtool
+pkgver=2.4.6
+arcext=tar.xz
+arcurlbase=https://ftpmirror.gnu.org/libtool/
+
+# configure 生成のためだけにインストールする。
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        --disable-ltdl-install \
+        CFLAGS="$optflags"
+}
