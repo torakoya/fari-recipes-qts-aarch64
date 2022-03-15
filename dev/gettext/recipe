@@ -1,0 +1,85 @@
+pkgname=gettext
+pkgver=0.21
+arcext=tar.lz
+arcurlbase=https://ftpmirror.gnu.org/gettext/
+run_deps="acl attr ncurses"
+
+# configure 生成のためだけにインストールする。
+
+_patch () {
+    # libtextstyle.so に RPATH を埋め込まない。configure 時
+    # の LT_SYS_LIBRARY_PATH= がここだけ効かないようなので。
+    sed -i.orig \
+        's@eval "*\([^=]*\).*\$hardcode_libdir_flag_spec@\1=; [ "$libdir" = "'$prefix/lib'" ] || &@' \
+        libtextstyle/build-aux/ltmain.sh &&
+
+    # examples をインストールしない。
+    sed -i.orig \
+        '/^SUBDIRS =/s/[[:blank:]]*examples//' \
+        gettext-tools/Makefile.in &&
+
+    # examples/build-aux/*.m4 をインストールしない。
+    sed -i.orig \
+        '/^install-data-am:/s/[[:blank:]]*install-examplesbuildauxDATA//' \
+        gettext-tools/m4/Makefile.in &&
+
+    # examples/build-aux/*.in をインストールしない。
+    sed -i \
+        '/^install-data-am:/s/[[:blank:]]*install-examplesbuildauxDATA//' \
+        gettext-tools/Makefile.in &&
+
+    # javadoc をインストールしない。
+    sed -i.orig \
+        '/^install-data-local:/s/[[:blank:]]*install-javadoc2//' \
+        gettext-runtime/intl-java/Makefile.in &&
+
+    # csharpdoc をインストールしない。
+    sed -i.orig \
+        '/^install-data-local:/s/[[:blank:]]*install-doc//' \
+        gettext-runtime/intl-csharp/Makefile.in &&
+
+    # FAQ.html などをインストールしない。
+    sed -i.orig \
+        '/^install-data-am:/s/[[:blank:]]*install-docDATA//' \
+        gettext-tools/doc/Makefile.in &&
+
+    # gettext の説明 gettext_*.html をインストールしない。
+    sed -i \
+        '/^install-data-local:/s/[[:blank:]]*install-html//' \
+        gettext-tools/doc/Makefile.in &&
+
+    # libtextstyle の説明 libtextstyle_*.html をインストール
+    # しない。
+    sed -i.orig \
+        '/^install-data-local:/s/[[:blank:]]*install-html//' \
+        libtextstyle/doc/Makefile.in &&
+
+    # gettext 関連の man ページの HTML 版をインストールしない。
+    sed -i.orig \
+        '/^install-data-local:/s/[[:blank:]]*install-html//' \
+        gettext-runtime/man/Makefile.in &&
+
+    # gettext 以外のコマンドの man ページの HTML 版を
+    # インストールしない。
+    sed -i.orig \
+        '/^install-data-local:/s/[[:blank:]]*install-html//' \
+        gettext-tools/man/Makefile.in
+}
+
+_config () {
+    # --without-included-regex: システムの regex を仮に多少
+    # 問題があったとしても使わせるため。
+
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        --disable-nls \
+        --disable-java \
+        --disable-csharp \
+        --disable-c++ \
+        --disable-libasprintf \
+        --without-included-regex \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
