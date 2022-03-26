@@ -1,5 +1,5 @@
 pkgname=libtool
-pkgver=2.4.6
+pkgver=2.4.7
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/libtool/
 
