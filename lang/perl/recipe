@@ -81,10 +81,14 @@ _config () {
 _build () {
     # zlib や libbz2 は同梱のものではなくシステムに
     # インストールされているものを使わせる。
+    #
+    # ZLIB_INCLUDE= は，指定しないと，システムの zlib を
+    # 使うよう指定しても同梱のヘッダファイルが #include
+    # されてしまう。
 
     # 隠されているコマンドも見たければ NOECHO= を足す。
 
-    BUILD_ZLIB=0 BUILD_BZIP2=0 make "$@"
+    BUILD_ZLIB=0 ZLIB_INCLUDE= BUILD_BZIP2=0 make "$@"
 }
 
 _test () {
