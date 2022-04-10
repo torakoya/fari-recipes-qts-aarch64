@@ -1,20 +1,8 @@
 pkgname=perl
-pkgver=5.34.0
+pkgver=5.34.1
 arcext=tar.xz
 arcurlbase=https://www.cpan.org/src/5.0/
 run_deps="bzip2 gdbm zlib"
-
-# テストは以下 2 つは失敗する：
-#
-# * ext/GDBM_File/t/gdbm.t
-# * t/op/magic.t
-#
-# t/op/magic.t は BusyBox の ps のコマンドラインオプションが
-# 期待どおりではないため。
-#
-# GDBM_File は gdbm 1.20 での仕様変更が原因らしい：
-#
-# https://bugzilla.redhat.com/show_bug.cgi?id=1974288
 
 _patch () {
     # extension に RPATH を埋め込むのをやめさせる。
@@ -92,5 +80,20 @@ _build () {
 }
 
 _test () {
+    # t/op/magic.t は BusyBox の ps では失敗する。コマンド
+    # ラインオプションが期待どおりではないため。
+
+    # zlib 1.2.12 になって以下が失敗するようになった：
+    #
+    # * cpan/Compress-Raw-Zlib/t/02zlib.t
+    # * cpan/IO-Compress/t/cz-03zlib-v1.t
+    #
+    # これで合格するようになりそう：
+    #
+    # https://github.com/Perl/perl5/commit/b864a746559843cd8bc1720eaf14c83faeb8fcc7
+    #
+    # ただし zlib 1.2.12 ではテストが通らないというだけでなく
+    # 挙動もおかしいのかも。
+
     make test "$@"
 }
