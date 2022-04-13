@@ -1,5 +1,5 @@
 pkgname=ruby
-pkgver=3.1.1
+pkgver=3.1.2
 arcext=tar.xz
 arcurlbase=https://cache.ruby-lang.org/pub/ruby/${pkgver%.*}/
 run_deps="gmp libffi ncurses openssl readline zlib"
