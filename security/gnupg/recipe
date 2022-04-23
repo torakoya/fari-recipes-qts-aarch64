@@ -1,5 +1,5 @@
 pkgname=gnupg
-pkgver=2.3.4
+pkgver=2.3.5
 arcext=tar.bz2
 arcurlbase=https://gnupg.org/ftp/gcrypt/gnupg/
 run_deps="bzip2 libassuan libgcrypt libgpg-error libksba ncurses npth pinentry readline zlib"
