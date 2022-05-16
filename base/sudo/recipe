@@ -1,5 +1,5 @@
 pkgname=sudo
-pkgver=1.9.9
+pkgver=1.9.10
 arcurlbase=https://www.sudo.ws/dist/
 run_deps="zlib"
 
