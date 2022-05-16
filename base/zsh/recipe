@@ -1,5 +1,5 @@
 pkgname=zsh
-pkgver=5.8.1
+pkgver=5.9
 arcext=tar.xz
 arcurlbase=https://downloads.sourceforge.net/project/zsh/zsh/$pkgver/
 run_deps=ncursesw
@@ -8,7 +8,7 @@ run_deps=ncursesw
 # 和文文字がエスケープされて読めなくなってしまった。
 
 # 悩んだ configure オプション：
-# * --disable-gdbm，GDBM は今のところなくて困っていない
+# * --enable-gdbm，GDBM は今のところなくて困っていない
 # * --enable-pcre，まあ不要だろう
 # * --enable-unicode9，まあ不要だろう
 
@@ -16,6 +16,5 @@ _config () {
     ./configure \
         --prefix="$prefix" \
         --enable-multibyte \
-        --disable-gdbm \
         CFLAGS="$optflags"
 }
