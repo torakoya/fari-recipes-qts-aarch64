@@ -1,5 +1,5 @@
 pkgname=w3m
-pkgver=0.5.3-git20210102-deb11u0.5
+pkgver=0.5.3-git20220429
 arcurl=https://github.com/tats/w3m/archive/refs/tags/v$(echo $pkgver | tr - +).$arcext
 run_deps="bdwgc ncurses openssl zlib"
 
@@ -32,6 +32,8 @@ _patch () {
 
 _config () {
     # --enable-image=no はインライン画像のサポートを切る。
+
+    # --with-cafile= は OpenSSL のデフォルトにまかせるなら不要。
 
     ./configure \
         --prefix="$prefix" \
