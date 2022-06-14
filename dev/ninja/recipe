@@ -1,5 +1,5 @@
 pkgname=ninja
-pkgver=1.10.2
+pkgver=1.11.0
 arcurl=https://github.com/ninja-build/ninja/archive/refs/tags/v$pkgver.$arcext
 
 build_deps="python"
