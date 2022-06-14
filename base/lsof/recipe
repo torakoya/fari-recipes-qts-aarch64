@@ -9,6 +9,8 @@ build_deps="groff" # soelim
 # テストは失敗する。
 
 _config () {
+    LSOF_INCLUDE="$prefix"/include \
+    LINUX_INCL="$prefix"/include \
     ./Configure -n linux
 }
 
