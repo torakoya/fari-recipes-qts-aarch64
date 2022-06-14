@@ -1,6 +1,7 @@
 pkgname=libtiff
-pkgver=4.3.0
+pkgver=4.4.0
 arcname=tiff
+arcext=tar.xz
 arcurlbase=https://download.osgeo.org/libtiff/
 run_deps="libjpeg xz zlib zstd"
 
