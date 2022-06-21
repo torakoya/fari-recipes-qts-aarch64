@@ -2,7 +2,7 @@ pkgname=gcc
 pkgver=11.2.0
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/gcc/$pkgname-$pkgver/
-run_deps="gmp mpc mpfr zlib"
+run_deps="gmp mpc mpfr zlib zstd"
 blddir=$workdir/objdir
 
 # TODO:
