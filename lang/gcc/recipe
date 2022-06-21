@@ -37,7 +37,10 @@ _patch () {
         gcc/config/aarch64/aarch64-linux.h &&
 
     # gcc -v の Configured with: .../configure のパスを切り詰める
-    sed -i.orig '/^TOPLEVEL_CONFIGURE_ARGUMENTS=/,+1s|$progname|${progname##*/}|' configure
+    sed -i.orig '/^TOPLEVEL_CONFIGURE_ARGUMENTS=/,+1s|$progname|${progname##*/}|' configure &&
+
+    # ビルド時に fixincludes を実行しない。
+    sed -i.orig 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
 }
 
 # configure のオプションは INSTALL/configure.html を参照。
