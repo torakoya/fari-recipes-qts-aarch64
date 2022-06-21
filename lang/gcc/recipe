@@ -1,5 +1,5 @@
 pkgname=gcc
-pkgver=11.2.0
+pkgver=12.1.0
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/gcc/$pkgname-$pkgver/
 run_deps="gmp mpc mpfr zlib zstd"
@@ -29,7 +29,7 @@ _patch () {
 
     # 標準のライブラリ置き場 /lib と /usr/lib を使わない
     sed -i.orig '/STANDARD_STARTFILE_PREFIX_[12]/s/"[^"]*"/""/' \
-        gcc/gcc.c &&
+        gcc/gcc.cc &&
 
     # ダイナミックリンカは /lib ではなく $prefix/lib のものを使う
     sed -i.orig \
