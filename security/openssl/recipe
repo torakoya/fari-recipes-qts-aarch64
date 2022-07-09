@@ -1,5 +1,5 @@
 pkgname=openssl
-pkgver=1.1.1p
+pkgver=1.1.1q
 arcurlbase=https://www.openssl.org/source/
 build_deps=perl
 run_deps=zlib
