@@ -1,5 +1,5 @@
 pkgname=openssl
-pkgver=1.1.1q
+pkgver=3.0.5
 arcurlbase=https://www.openssl.org/source/
 build_deps=perl
 run_deps=zlib
@@ -15,17 +15,12 @@ run_deps=zlib
 _patch () {
     # 静的ライブラリをインストールしない
     sed -i.orig \
-        's/^\(INSTALL_LIBS=\).*/\1/' \
+        's/^INSTALL_LIBS/&_ignored/' \
         Configurations/unix-Makefile.tmpl
 
     # man ページの HTML 版をインストールしない
     sed -i \
         '/^install_docs:/s/ *install_html_docs//' \
-        Configurations/unix-Makefile.tmpl
-
-    # man ページの suffix を "ssl" にする
-    sed -i \
-        's/^\(MANSUFFIX=\).*/\1ssl/' \
         Configurations/unix-Makefile.tmpl
 
     # ビルド日時（openssl version -a などで見られる）を消す
