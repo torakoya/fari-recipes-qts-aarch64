@@ -1,5 +1,5 @@
 pkgname=ffmpeg
-pkgver=5.0.1
+pkgver=5.1
 arcext=tar.xz
 arcurlbase=https://www.ffmpeg.org/releases/
 run_deps="bzip2 openssl xz zlib"
