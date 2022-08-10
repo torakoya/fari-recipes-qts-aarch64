@@ -7,7 +7,6 @@ _config () {
     ./configure \
         --prefix="$prefix" \
         --enable-fsect-man5 \
-        --disable-static \
         --disable-silent-rules \
         CFLAGS="$optflags" \
         LT_SYS_LIBRARY_PATH="$prefix"/lib
