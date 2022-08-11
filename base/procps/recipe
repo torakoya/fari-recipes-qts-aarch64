@@ -1,7 +1,7 @@
 pkgname=procps
-pkgver=3.3.17
+pkgver=4.0.0
 arcext=tar.xz
-arcfile=procps-ng-$pkgver.$arcext
+arcname=procps-ng
 arcurlbase=https://downloads.sourceforge.net/project/procps-ng/Production/
 run_deps="ncursesw"
 
