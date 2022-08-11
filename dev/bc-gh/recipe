@@ -1,8 +1,9 @@
 pkgname=bc-gh
-pkgver=5.2.2
+pkgver=6.0.1
 arcname=bc
 arcext=tar.xz
 arcurlbase=https://github.com/gavinhoward/bc/releases/download/$pkgver/
+run_deps="ncurses readline"
 
 # bc の実装のひとつ。POSIX 準拠で GNU bc の拡張を持っていて
 # GNU bc より高速らしい。
@@ -15,10 +16,15 @@ _config () {
     # --disable-generated-tests: GNU bc（と互換の bc）を要求
     # するテストを実施しない。
 
+    # 履歴を有効にするばあい，その実装手段は自前，Readline，
+    # Editline がある。既定値は履歴オン，自前実装。
+
     CC=cc \
     CFLAGS="$optflags" \
+    LDFLAGS=-lncurses \
     ./configure \
         --prefix="$prefix" \
         --disable-nls \
+        --enable-readline \
         --disable-generated-tests
 }
