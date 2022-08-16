@@ -26,6 +26,8 @@ _config () {
     # メリットは薄いのかもしれない。まあ 8 互換にする
     # デメリットもなさそうなので 8 にしておく。
 
+    # BUILD=: バージョン表示からビルド日を消す。
+
     # CMAKE_C_FLAGS= など 2 種: CMAKE_C_FLAGS_RELEASE に
     # "$optflags -DNDEBUG" を与えたいのだが，この中の -O2 は
     # -O3 に置換されてしまうので，変則的な与えかたをしておく。
@@ -38,6 +40,7 @@ _config () {
         -DCMAKE_SKIP_INSTALL_RPATH=1 \
         -DWITH_TURBOJPEG=0 \
         -DWITH_JPEG8=1 \
+        -DBUILD=- \
         -DCMAKE_C_FLAGS="$optflags" \
         -DCMAKE_C_FLAGS_RELEASE=-DNDEBUG \
         "$srcdir"
