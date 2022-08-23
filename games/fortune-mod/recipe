@@ -1,5 +1,5 @@
 pkgname=fortune-mod
-pkgver=3.14.0
+pkgver=3.14.1
 arcext=tar.xz
 arcurlbase=https://github.com/shlomif/fortune-mod/releases/download/fortune-mod-$pkgver/
 build_deps="cmake"
