@@ -1,5 +1,5 @@
 pkgname=sqlite
-pkgver=3.39.2
+pkgver=3.39.3
 arcname=sqlite-autoconf
 srcname=$arcname-$(printf '%d%02d%02d%02d' $(echo $pkgver | tr . ' '))
 arcfile=$srcname.$arcext
