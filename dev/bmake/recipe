@@ -1,5 +1,5 @@
 pkgname=bmake
-pkgver=20220726
+pkgver=20220901
 srcname=$pkgname
 arcurlbase=http://www.crufty.net/ftp/pub/sjg/
 
@@ -27,7 +27,14 @@ _patch () {
     sed -i.orig \
         -e '/^TESTS+=.*cmd-interrupt/s/^/#/' \
         -e '/^TESTS+=.*deptgt-interrupt/s/^/#/' \
-        unit-tests/Makefile
+        unit-tests/Makefile &&
+
+    # egrep が GNU grep 3.8 から旧式であるという警告が出て
+    # テストに不合格になるのを回避する。
+    sed -i.orig \
+        's/egrep/grep -E/' \
+        unit-tests/export.mk \
+        unit-tests/make-exported.mk
 }
 
 _config () {
