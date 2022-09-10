@@ -1,5 +1,5 @@
 pkgname=glibc
-pkgver=2.35
+pkgver=2.36
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/libc/
 blddir=$workdir/objdir
