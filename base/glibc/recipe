@@ -8,9 +8,6 @@ blddir=$workdir/objdir
 # 方針だが glibc の静的ライブラリは何かのときに役に立つかも。
 
 _patch () {
-    # LFS のマネをして $prefix/var のレイアウトを変える。
-    curl -L https://www.linuxfromscratch.org/patches/lfs/development/glibc-2.35-fhs-1.patch | patch -p1 &&
-
     # share/locale/locale.alias を入れない。
     sed -i.orig '/^install-others\s*=/s/=.*/=/' intl/Makefile &&
 
