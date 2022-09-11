@@ -1,8 +1,11 @@
 pkgname=binutils
-pkgver=2.38
+pkgver=2.39
 arcext=tar.lz
 arcurlbase=https://ftpmirror.gnu.org/binutils/
 blddir=$workdir/objdir
+
+# 2.39: help2man がない環境では gprofng の man ページが空になる。
+# https://sourceware.org/bugzilla/show_bug.cgi?id=29521
 
 # --enable/disable-plugins は省略すると dlopen が使える環境では
 # enable になる。プラグインってうれしいのかな。
@@ -30,6 +33,11 @@ blddir=$workdir/objdir
 
 # lt_cv_sys_lib_dlsearch_path_spec= はバイナリへの RPATH を埋め込みを
 # やめさせるため。
+#
+# $prefix/lib/../lib は gprofng がそういうパスを埋め込むので。
+
+# --enable-new-dtags は $prefix/lib/gprofng にインストール
+# される gprofng のライブラリのため。
 
 # LEXLIB= は ar と ranlib が libfl が不要なのにリンクしてしまうのを
 # 避けるため。
@@ -82,11 +90,12 @@ _config () {
         --with-lib-path="$prefix"/lib \
         --enable-deterministic-archives \
         CFLAGS="$optflags" \
-        CXXFLAGS="$optflags"
+        CXXFLAGS="$optflags" \
+        LDFLAGS=-Wl,--enable-new-dtags
 }
 
 _build () {
-    lt_cv_sys_lib_dlsearch_path_spec="$prefix"/lib \
+    lt_cv_sys_lib_dlsearch_path_spec="$prefix/lib $prefix/lib/../lib" \
     LEXLIB= \
     gold_cv_lib_static=no \
     make tooldir="$prefix" "$@"
