@@ -1,5 +1,5 @@
 pkgname=libpng
-pkgver=1.6.37
+pkgver=1.6.38
 arcext=tar.xz
 arcurlbase=https://downloads.sourceforge.net/project/libpng/libpng16/$pkgver/
 run_deps="zlib"
