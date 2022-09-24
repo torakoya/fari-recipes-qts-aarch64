@@ -1,5 +1,5 @@
 pkgname=tzdata
-pkgver=2022c
+pkgver=2022d
 arcname=tzdb
 arcext=tar.lz
 arcurlbase=https://data.iana.org/time-zones/releases/
