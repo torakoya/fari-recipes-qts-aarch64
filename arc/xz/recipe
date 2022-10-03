@@ -1,5 +1,5 @@
 pkgname=xz
-pkgver=5.2.6
+pkgver=5.2.7
 arcext=tar.xz
 arcurlbase=https://downloads.sourceforge.net/project/lzmautils/
 
