@@ -66,7 +66,14 @@ _build () {
 }
 
 _test () {
-    do_make test "$@"
+    # TEST_SHELL_PATH= と TEST_NO_MALLOC_CHECK=1 はどちらか
+    # 片方だけではダメ。テストの途中でコケる。
+    #
+    # TEST_SHELL_PATH ではなく SHELL_PATH はここで指定すると
+    # 再ビルドになってしまう。また，インストールされる各種
+    # シェルスクリプトの shebang がそれになってしまうことに
+    # 注意。
+    do_make test TEST_SHELL_PATH="$prefix"/bin/dash TEST_NO_MALLOC_CHECK=1 "$@"
 }
 
 _install () {
