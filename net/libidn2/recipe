@@ -1,5 +1,5 @@
 pkgname=libidn2
-pkgver=2.3.3
+pkgver=2.3.4
 arcurlbase=https://ftpmirror.gnu.org/libidn/
 
 _config () {
