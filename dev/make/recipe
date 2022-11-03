@@ -1,5 +1,5 @@
 pkgname=make
-pkgver=4.3
+pkgver=4.4
 arcext=tar.lz
 arcurlbase=https://ftpmirror.gnu.org/make/
 test_deps="perl"
