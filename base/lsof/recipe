@@ -1,5 +1,5 @@
 pkgname=lsof
-pkgver=4.95.0
+pkgver=4.96.4
 arcurl=https://github.com/lsof-org/lsof/archive/refs/tags/"$pkgver".tar.gz
 build_deps="groff" # soelim
 
@@ -16,7 +16,6 @@ _config () {
 
 __make () {
     make \
-        BUILD_DATE= \
         LSOF_HOST=none \
         LSOF_LOGNAME=none \
         LSOF_SYSINFO=none \
