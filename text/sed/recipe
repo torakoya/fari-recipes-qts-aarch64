@@ -1,5 +1,5 @@
 pkgname=sed
-pkgver=4.8
+pkgver=4.9
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/sed/
 run_deps=acl
