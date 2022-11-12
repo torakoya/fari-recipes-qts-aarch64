@@ -1,5 +1,5 @@
 pkgname=lcms2
-pkgver=2.13.1
+pkgver=2.14
 arcurlbase=https://downloads.sourceforge.net/project/lcms/lcms/$(echo $pkgver | cut -d. -f1,2)/
 run_deps="libjpeg libtiff zlib"
 
