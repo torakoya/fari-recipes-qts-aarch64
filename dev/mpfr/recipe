@@ -1,5 +1,5 @@
 pkgname=mpfr
-pkgver=4.1.0
+pkgver=4.1.1
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/mpfr/
 run_deps=gmp
