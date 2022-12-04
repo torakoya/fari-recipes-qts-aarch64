@@ -1,5 +1,5 @@
 pkgname=ruby
-pkgver=3.1.2
+pkgver=3.1.3
 arcext=tar.xz
 arcurlbase=https://cache.ruby-lang.org/pub/ruby/${pkgver%.*}/
 run_deps="gmp libffi ncurses openssl readline zlib"
@@ -79,20 +79,9 @@ _test () {
 }
 
 _install () {
-    touch .fr-install-start
-
     # V=1 は native extension のビルドログを詳細にするため。
     # 出力は
     # PREFIX/lib/ruby/gems/VER/extensions/ARCH/VER/GEM/gem_make.out
     # にある。内容を確認したら削除していい。
     make V=1 install "$@" || return $?
-
-    find "$DESTDIR$prefix"/lib/ruby/gems -name Makefile -newer .fr-install-start | sed 's|/Makefile$||' | while read dir; do
-        fr_do cd \"$dir\" '&&' make distclean
-    done
-
-    echo Build logs, which you can delete:
-    find "$DESTDIR$prefix"/lib/ruby/gems -name gem_make.out -newer .fr-install-start
-
-    rm -f .fr-install-start
 }
