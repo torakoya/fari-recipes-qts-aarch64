@@ -1,5 +1,5 @@
 pkgname=procps
-pkgver=4.0.0
+pkgver=4.0.2
 arcext=tar.xz
 arcname=procps-ng
 arcurlbase=https://downloads.sourceforge.net/project/procps-ng/Production/
@@ -9,13 +9,13 @@ _patch () {
     # uptime をインストールしない。Coreutils がインストール
     # しているので。
     sed -i.orig \
-        -e '/^@.*@bin_PROGRAMS/,/^@.*@[^[:blank:]]/s/[[:blank:]]*uptime\$(EXEEXT)//' \
-        -e 's/[[:blank:]]*uptime\.1//' \
+        -e '/^@.*@bin_PROGRAMS/,/^@.*@[^[:blank:]]/s/[[:blank:]]*src\/uptime\$(EXEEXT)//' \
+        -e 's/man\/uptime\.1[[:blank:]]*//' \
         Makefile.in
 
     # 英語以外の man ページをインストールしない。
     sed -i \
-        '/^SUBDIRS/,/^$/ { /man-po/d }' \
+        '/^SUBDIRS/,/^$/ { /po-man/d }' \
         Makefile.in
 }
 
@@ -31,6 +31,13 @@ _config () {
     # CPPFLAGS=...: slabtop と top のコンパイルに ncurses の
     # ためのフラグが使われないのでここで与える。
 
+    # ac_cv_func_pidfd_open=no: システムがシステムコール
+    # pidfd_open を持っていないと指定する。QTS はカーネルが
+    # 4.2.8 で pidfd_open を持っていないが，glibc が 2.36 から
+    # pidfd のラッパ（include/sys/pidfd.h）をインストールする
+    # ようになったため，configure に自動判別させると
+    # pidfd_open を持っていると誤解してしまう。
+
     ./configure \
         --prefix="$prefix" \
         --disable-silent-rules \
@@ -39,6 +46,7 @@ _config () {
         --disable-kill \
         --disable-modern-top \
         --enable-watch8bit \
+        ac_cv_func_pidfd_open=no \
         CPPFLAGS="$(pkg-config --cflags ncurses)" \
         CFLAGS="$optflags" \
         LT_SYS_LIBRARY_PATH="$prefix"/lib
