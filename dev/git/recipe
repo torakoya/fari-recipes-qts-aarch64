@@ -1,5 +1,5 @@
 pkgname=git
-pkgver=2.38.1
+pkgver=2.38.2
 arcext=tar.xz
 arcurlbase=https://www.kernel.org/pub/software/scm/git/
 run_deps="curl expat pcre2 openssh perl zlib"
@@ -20,9 +20,6 @@ run_deps="curl expat pcre2 openssh perl zlib"
 # make test は Documentation/MyFirstContribution.txt や
 # Documentation/howto/maintain-git.txt に書かれている。
 # Git の開発者向けかな。ユーザが実行するには重いのかも。
-#
-# で，いくつか失敗する。どうしよう。
-# https://git.wiki.kernel.org/index.php/What_to_do_when_a_test_fails
 
 # Python が必要なのは git-p4（Perforce リポジトリにアクセスする）
 # だけなのでオフにする。
