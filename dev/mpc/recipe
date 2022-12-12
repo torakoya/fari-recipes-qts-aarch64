@@ -1,5 +1,5 @@
 pkgname=mpc
-pkgver=1.2.1
+pkgver=1.3.0
 arcurlbase=https://ftpmirror.gnu.org/mpc/
 run_deps="gmp mpfr"
 
