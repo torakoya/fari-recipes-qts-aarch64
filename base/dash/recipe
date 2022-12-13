@@ -1,13 +1,20 @@
 pkgname=dash
-pkgver=0.5.11.5
+pkgver=0.5.12
 arcurlbase=http://gondor.apana.org.au/~herbert/dash/files/
 
 # --enable-fnmatch とか --enable-glob を与えるとサイズを小さくできる
-# だろうが，DASH は独自拡張のない状態にしたい。
+# だろうが，DASH は glibc の独自拡張やおかしな挙動のない状態にしたい。
+#
+# 0.5.12 から --enable-fnmatch が既定値になった。glob はいったん enable
+# にされたがおかしな挙動があって disable に戻された：
+#
+# Re: [PATCH] shell: Enable fnmatch/glob by default
+# https://www.mail-archive.com/dash@vger.kernel.org/msg01972.html
 
 _config () {
     ./configure \
         --prefix="$prefix" \
         --disable-silent-rules \
+        --disable-fnmatch \
         CFLAGS="$optflags"
 }
