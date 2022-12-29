@@ -1,7 +1,7 @@
 pkgname=git
 pkgver=2.38.2
 arcext=tar.xz
-arcurlbase=https://www.kernel.org/pub/software/scm/git/
+arcurlbase=https://mirrors.edge.kernel.org/pub/software/scm/git/
 run_deps="curl expat pcre2 openssh perl zlib"
 
 # man ページは生成に AsciiDoc と xmlto が必要。このためだけに
