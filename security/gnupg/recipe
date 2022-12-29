@@ -1,5 +1,5 @@
 pkgname=gnupg
-pkgver=2.3.8
+pkgver=2.4.0
 arcext=tar.bz2
 arcurlbase=https://gnupg.org/ftp/gcrypt/gnupg/
 run_deps="bzip2 libassuan libgcrypt libgpg-error libksba ncurses npth pinentry readline zlib"
@@ -8,6 +8,12 @@ run_deps="bzip2 libassuan libgcrypt libgpg-error libksba ncurses npth pinentry r
 # ntbTLS か GnuTLS が必要。
 
 # TOFU は使わない。なお使うには SQLite が必要。
+
+# 2.4.0 はソースディレクトリでビルド（./configure）すると
+# make check が tests/gpgme でコケる：
+#   mkdir: cannot create directory 'setup.scm': Not a directory
+# 上流では修正済み：
+# https://dev.gnupg.org/T6313
 
 _patch () {
     # help*.txt は英語だけインストールする。
