@@ -1,5 +1,5 @@
 pkgname=git
-pkgver=2.38.2
+pkgver=2.39.0
 arcext=tar.xz
 arcurlbase=https://mirrors.edge.kernel.org/pub/software/scm/git/
 run_deps="curl expat pcre2 openssh perl zlib"
