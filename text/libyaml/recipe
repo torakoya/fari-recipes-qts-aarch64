@@ -1,0 +1,12 @@
+pkgname=libyaml
+pkgver=0.2.5
+arcname=yaml
+arcurlbase=https://github.com/yaml/libyaml/releases/download/$pkgver/
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        CFLAGS="$optflags"
+}
