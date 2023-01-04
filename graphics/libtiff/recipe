@@ -1,14 +1,16 @@
 pkgname=libtiff
-pkgver=4.4.0
+pkgver=4.5.0
 arcname=tiff
 arcext=tar.xz
 arcurlbase=https://download.osgeo.org/libtiff/
 run_deps="libjpeg xz zlib zstd"
 
 _patch () {
-    # html/ の中身をインストールしない。内容はたぶん公式
-    # サイトと man ページの HTML 版。
-    sed -i.orig '/^SUBDIRS/s/[[:blank:]]*html//' Makefile.in
+    # HTML の文書をインストールしない。configure の --disable-docs
+    # は man ページのインストールもやめてしまうのでだめ。
+    sed -i.orig \
+        '/^install-data-am:/s/install-data-local[[:blank:]]*//' \
+        doc/Makefile.in
 }
 
 _config () {
