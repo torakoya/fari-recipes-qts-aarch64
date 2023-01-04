@@ -1,5 +1,5 @@
 pkgname=man-pages
-pkgver=6.01
+pkgver=6.02
 arcext=tar.xz
 arcurlbase=https://mirrors.edge.kernel.org/pub/linux/docs/man-pages/
 
