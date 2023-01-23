@@ -1,5 +1,5 @@
 pkgname=lsof
-pkgver=4.96.4
+pkgver=4.98.0
 arcurl=https://github.com/lsof-org/lsof/archive/refs/tags/"$pkgver".tar.gz
 build_deps="groff" # soelim
 
