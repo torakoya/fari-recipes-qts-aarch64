@@ -60,9 +60,5 @@ _test () {
 }
 
 _install () {
-    # V=1 は native extension のビルドログを詳細にするため。
-    # 出力は
-    # PREFIX/lib/ruby/gems/VER/extensions/ARCH/VER/GEM/gem_make.out
-    # にある。内容を確認したら削除していい。
-    make V=1 install "$@" || return $?
+    make V=1 install "$@"
 }
