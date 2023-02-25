@@ -1,5 +1,5 @@
 pkgname=fortune-mod
-pkgver=3.14.1
+pkgver=3.16.0
 arcext=tar.xz
 arcurlbase=https://github.com/shlomif/fortune-mod/releases/download/fortune-mod-$pkgver/
 build_deps="cmake"
@@ -7,11 +7,17 @@ test_deps="perl"
 
 blddir=$workdir/objdir
 
-# データファイルのインストールディレクトリ（LOCALDIR）は fortunes って
-# 複数形なのか。「fortune というプログラムのためのディレクトリ」では
-# なくて「fortune という種類のファイルを置く共用のディレクトリ」って
-# 意味合いなのかな。単数形にしておく。BSD では単数形のようだ
-# （/usr/share/games/fortune）。
+# COOKIEDIR は fortune ファイルをインストールする場所，LOCALDIR は
+# システム提供の fortune ファイルがある場所かな。
+# https://github.com/shlomif/fortune-mod/pull/69
+#
+# LOCALDIR は不要だが，まあ BSD での場所 /usr/share/games/fortune を
+# 指定しておく。
+#
+# ちなみに fortune ファイル置き場のディレクトリ名はこのプログラムは
+# 複数形 fortunes にするが BSD では単数形 fortune。単数形は「fortune
+# というプログラムのためのディレクトリ」，複数形は「fortune ファイル
+# を置くディレクトリ」という意味かな。
 
 # テストには Perl のいろいろなモジュールが必要（INSTALL.asciidoc を参照）。
 
@@ -23,7 +29,8 @@ _patch () {
 _config () {
     cmake \
         -DCMAKE_INSTALL_PREFIX="$prefix" \
-        -DLOCALDIR="$prefix"/share/fortune \
+        -DCOOKIEDIR="$prefix"/share/fortune \
+        -DLOCALDIR=/usr/share/games/fortune \
         -DCMAKE_VERBOSE_MAKEFILE=1 \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_C_FLAGS_RELEASE="$optflags -DNDEBUG" \
