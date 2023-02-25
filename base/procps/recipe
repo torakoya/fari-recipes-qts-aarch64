@@ -1,5 +1,5 @@
 pkgname=procps
-pkgver=4.0.2
+pkgver=4.0.3
 arcext=tar.xz
 arcname=procps-ng
 arcurlbase=https://downloads.sourceforge.net/project/procps-ng/Production/
