@@ -1,6 +1,6 @@
 pkgname=p7zip
-pkgver=17.04
-arcurl=https://github.com/jinfeihan57/p7zip/archive/refs/tags/v$pkgver.$arcext
+pkgver=17.05
+arcurl=https://github.com/p7zip-project/p7zip/archive/refs/tags/v$pkgver.$arcext
 
 # コマンドは単一バイナリ（動的ライブラリをインストールしない）
 # の 7za だけインストールする。7z と zip だけ扱えればいいのだが，
@@ -10,6 +10,9 @@ arcurl=https://github.com/jinfeihan57/p7zip/archive/refs/tags/v$pkgver.$arcext
 # SFX（self-extracting archive）は有効にしない。
 
 _patch () {
+    # 17.05: バージョン表示を修正する。
+    sed -i.orig -e '/MY_VERSION /s/04/05/' -e '/P7ZIP_VERSION/s/04/05/' C/7zVersion.h &&
+
     # SFX のテスト（とそれにともなうビルド）を回避する。
     sed -i.orig '/^test:/s/[[:blank:]]*sfx//' makefile.common &&
     sed -i.orig '/7za433_7zip_lzma\.x/,/^$/s/./#&/' check/check_7za.sh &&
