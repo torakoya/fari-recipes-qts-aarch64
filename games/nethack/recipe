@@ -1,9 +1,9 @@
 pkgname=nethack
-pkgver=3.6.6
+pkgver=3.6.7
 arcext=tgz
 arcfile=$pkgname-$(echo $pkgver | tr -d .)-src.$arcext
 arcurlbase=https://www.nethack.org/download/$pkgver/
-srcname=NetHack-NetHack-${pkgver}_Released
+srcname=NetHack-${pkgver}
 run_deps="ncurses"
 
 # setuid するユーザ。~/.nethackrc を読めなくなる可能性も
@@ -27,19 +27,6 @@ run_deps="ncurses"
 # その中の実行可能ファイルを libexec に入れるべきかな。
 
 _patch () {
-    # 3.6.6: 最近の glibc の sys/cdefs.h でコンパイルエラー
-    # になるのを修正する。原因は __warn_unused_result__ を
-    # include/tradstdc.h で空にしていること。空にするのを
-    # 無条件にやめさせるよう修正するので，環境によっては
-    # べつの場所で問題が発生するかもしれない。本流では修正
-    # 済み。
-    #
-    # work around ubuntu 20.10 build issue
-    # https://github.com/NetHack/NetHack/commit/1cb5dc04605daa45f1c6a647c17442ed7ff2fe4e
-    sed -i.orig \
-        's|^#define __warn_unused_result__|/*&|' \
-        include/tradstdc.h &&
-
     sed -i.orig '
         # GAME が util/Makefile で設定されないが問題ないのかな。
         # recover が参照する HACKDIR から抜け落ちるので問題が
