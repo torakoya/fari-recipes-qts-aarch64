@@ -2,7 +2,7 @@ pkgname=cmake
 pkgver=3.25.2
 arcurlbase=https://github.com/Kitware/CMake/releases/download/v$pkgver/
 
-run_deps="bzip2 curl expat ncurses xz zlib"
+run_deps="bzip2 curl expat ncurses xz zlib zstd"
 
 blddir=$workdir/objdir
 
@@ -76,6 +76,7 @@ _config () {
         --system-zlib \
         --system-bzip2 \
         --system-liblzma \
+        --system-zstd \
         CFLAGS="$optflags" \
         CXXFLAGS="$optflags" \
         -- \
