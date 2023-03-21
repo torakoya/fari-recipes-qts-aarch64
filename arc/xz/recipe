@@ -1,5 +1,5 @@
 pkgname=xz
-pkgver=5.4.1
+pkgver=5.4.2
 arcext=tar.xz
 arcurlbase=https://downloads.sourceforge.net/project/lzmautils/
 
@@ -9,6 +9,7 @@ _config () {
         --disable-silent-rules \
         --disable-static \
         --disable-nls \
+        --disable-doc \
         CFLAGS="$optflags" \
         LT_SYS_LIBRARY_PATH="$prefix"/lib
 }
