@@ -1,5 +1,5 @@
 pkgname=zstd
-pkgver=1.5.4
+pkgver=1.5.5
 arcurlbase=https://github.com/facebook/zstd/releases/download/v$pkgver/
 
 # README.md だけでなく lib/README.md や programs/README.md
@@ -10,14 +10,7 @@ _patch () {
     sed -i.orig '/^install:/s/install-static[[:blank:]]*//' lib/Makefile &&
 
     # コマンドは共有ライブラリをリンクする。
-    sed -i.orig '/^zstd-release:/s/[[:blank:]]zstd$/&-dll/' programs/Makefile &&
-
-    # 1.5.4 で共有ライブラリをリンクするコマンドがつくれない
-    # 問題の workaround。こちらから：
-    # https://github.com/facebook/zstd/issues/3492
-    # なおちゃんとした修正が upstream にはすでに入っている：
-    # https://github.com/facebook/zstd/pull/3496
-    sed -i '/^zstd-dll : LDLIBS/s/$/ $(LIBZSTD)\/libzstd.a/' programs/Makefile
+    sed -i.orig '/^zstd-release:/s/[[:blank:]]zstd$/&-dll/' programs/Makefile
 }
 
 _config () {
