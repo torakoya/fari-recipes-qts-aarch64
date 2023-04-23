@@ -1,5 +1,5 @@
 pkgname=coreutils
-pkgver=9.1
+pkgver=9.3
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/gnu/coreutils/
 run_deps="attr acl libcap"
