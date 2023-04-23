@@ -17,6 +17,9 @@ test_deps="perl"
 # はあまりいろいろなライブラリに依存させるべきではないとも思う。
 # まあ / とか /usr とかに入れるつもりでビルドしてはいないから
 # いいんだけど。
+#
+# 既定値は auto-gpl-compat（GPL 互換のものがあれば）。OpenSSL は
+# 3.0 から GPL 互換（Apache ライセンス 2.0）。
 
 # テストは tests/misc/timeout-group と tests/id/zero が失敗する。
 
@@ -26,5 +29,6 @@ _config () {
         --disable-silent-rules \
         --disable-nls \
         --without-libgmp \
+        --without-openssl \
         CFLAGS="$optflags"
 }
