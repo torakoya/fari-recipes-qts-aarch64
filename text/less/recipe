@@ -1,5 +1,5 @@
 pkgname=less
-pkgver=608
+pkgver=632
 arcurlbase=http://www.greenwoodsoftware.com/less/
 run_deps="ncursesw"
 
@@ -12,4 +12,12 @@ _config () {
         --prefix="$prefix" \
         --with-regex=posix \
         CFLAGS="$optflags"
+}
+
+# 632 からテストが実装されたっぽいがとりあえずスキップする。lesstest/
+# にテストがある想定のようだが配布物には含まれていなくてコケる。あと
+# -DLESSTEST をつけてソースコードをいちからビルドしなおすのでバイナリ
+# が変わってしまう。
+_test () {
+    :
 }
