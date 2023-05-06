@@ -1,7 +1,7 @@
 pkgname=xz
-pkgver=5.4.2
+pkgver=5.4.3
 arcext=tar.xz
-arcurlbase=https://downloads.sourceforge.net/project/lzmautils/
+arcurlbase=https://github.com/tukaani-project/xz/releases/download/v$pkgver/
 
 _config () {
     ./configure \
