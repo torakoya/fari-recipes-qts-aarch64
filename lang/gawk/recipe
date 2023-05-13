@@ -1,5 +1,5 @@
 pkgname=gawk
-pkgver=5.2.1
+pkgver=5.2.2
 arcext=tar.lz
 arcurlbase=https://ftpmirror.gnu.org/gawk/
 
