@@ -1,5 +1,5 @@
 pkgname=wget
-pkgver=1.21.3
+pkgver=1.21.4
 arcext=tar.lz
 arcurlbase=https://ftpmirror.gnu.org/wget/
 run_deps="libidn2 openssl zlib"
