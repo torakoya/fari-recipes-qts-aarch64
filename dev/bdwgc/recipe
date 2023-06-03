@@ -1,5 +1,5 @@
 pkgname=bdwgc
-pkgver=8.2.2
+pkgver=8.2.4
 arcname=gc
 arcurlbase=https://github.com/ivmai/bdwgc/releases/download/v$pkgver/
 
