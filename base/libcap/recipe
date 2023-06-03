@@ -1,5 +1,5 @@
 pkgname=libcap
-pkgver=2.68
+pkgver=2.69
 arcext=tar.xz
 arcurlbase=https://mirrors.edge.kernel.org/pub/linux/libs/security/linux-privs/libcap2/
 
