@@ -1,5 +1,5 @@
 pkgname=libassuan
-pkgver=2.5.5
+pkgver=2.5.6
 arcext=tar.bz2
 arcurlbase=https://gnupg.org/ftp/gcrypt/libassuan/
 run_deps="libgpg-error"
