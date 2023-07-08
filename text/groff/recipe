@@ -1,12 +1,8 @@
 pkgname=groff
-pkgver=1.22.4
+pkgver=1.23.0
 arcurlbase=https://ftpmirror.gnu.org/groff/
 
 # man に必要な nroff のためにインストールする。
-
-# --with-doc=no は man ページ以外のマニュアルや見本をインストールしない。
-# それでも letter.mm はインストールされてしまうので make install 時に
-# MMEXAMPLEFILES を上書きする。
 
 # --without-uchardet は uchardet を使う preconv のビルドをしない。
 
@@ -14,7 +10,6 @@ _config () {
     ./configure \
         --prefix="$prefix" \
         --disable-silent-rules \
-        --with-doc=no \
         --without-uchardet \
         PAGE=A4 \
         CFLAGS="$optflags" \
@@ -22,5 +17,5 @@ _config () {
 }
 
 _install () {
-    make install MMEXAMPLEFILES= "$@"
+    make install "$@"
 }
