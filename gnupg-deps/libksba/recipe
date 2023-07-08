@@ -1,5 +1,5 @@
 pkgname=libksba
-pkgver=1.6.3
+pkgver=1.6.4
 arcext=tar.bz2
 arcurlbase=https://gnupg.org/ftp/gcrypt/libksba/
 run_deps="libgpg-error"
