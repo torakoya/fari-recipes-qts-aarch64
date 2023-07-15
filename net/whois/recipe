@@ -1,5 +1,5 @@
 pkgname=whois
-pkgver=5.5.16
+pkgver=5.5.17
 arcext=tar.xz
 arcfile=${pkgname}_$pkgver.$arcext
 arcurlbase=http://deb.debian.org/debian/pool/main/w/whois/
