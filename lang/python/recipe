@@ -3,7 +3,7 @@ pkgver=3.11.4
 arcname=Python
 arcext=tar.xz
 arcurlbase=https://www.python.org/ftp/python/"$pkgver"/
-run_deps="bzip2 expat gdbm libffi ncursesw openssl readline sqlite xz zlib"
+run_deps="bzip2 expat gdbm libffi libxcrypt ncursesw openssl readline sqlite xz zlib"
 
 # --with-system-ffi は渡さなくても yes になった。渡すと警告が出た：
 # configure: WARNING: --with(out)-system-ffi is ignored on this platform

@@ -1,7 +1,7 @@
 pkgname=cyrus-sasl
 pkgver=2.1.28
 arcurlbase=https://github.com/cyrusimap/cyrus-sasl/releases/download/cyrus-sasl-$pkgver/
-run_deps="openssl"
+run_deps="libxcrypt openssl"
 
 # Mutt で SMTP 認証を利用するために，クライアントだけ入れる。
 

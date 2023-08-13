@@ -2,7 +2,7 @@ pkgname=perl
 pkgver=5.38.0
 arcext=tar.xz
 arcurlbase=https://www.cpan.org/src/5.0/
-run_deps="bzip2 gdbm zlib"
+run_deps="bzip2 gdbm libxcrypt zlib"
 
 _patch () {
     # extension に RPATH を埋め込むのをやめさせる。

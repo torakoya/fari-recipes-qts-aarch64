@@ -2,6 +2,7 @@ pkgname=opendoas
 pkgver=6.8.2
 arcext=tar.xz
 arcurlbase=https://github.com/Duncaen/OpenDoas/releases/download/v$pkgver/
+run_deps="libxcrypt"
 
 # doas の移植は GitHub の Duncaen/OpenDoas と slicer69/doas
 # がよく使われているようだ。
