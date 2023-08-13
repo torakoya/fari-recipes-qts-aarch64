@@ -1,0 +1,33 @@
+pkgname=libxcrypt
+pkgver=4.4.36
+arcext=tar.xz
+arcurlbase=https://github.com/besser82/libxcrypt/releases/download/v$pkgver/
+
+_config () {
+    # --disable-failure-tokens
+    # crypt() と crypt_r() が失敗時に「failure token」を返すのではなく
+    # NULL を返すようにする。POSIX では crypt() は NULL を返す（crypt_r()
+    # は glibc 拡張）。
+
+    # --disable-xcrypt-compat-files
+    # xcrypt.h と libxcrypt.so をインストールしない。xcrypt.h によると
+    # バージョン 3.1.1 以前との後方互換性のためのもの。
+
+    # --enable-obsolete-api=ARG
+    # "glibc" を設定すると，インストールされる libcrypt.so のバージョンが
+    # glibc と同じになる（libcrypt.so.1）。
+
+    # --enable-hashes=strong,glibc
+    # よくわからないが LFS と Arch Linux が両方とも strong,glibc
+    # だったのでマネした。Homebrew は指定なし（＝all）。
+
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        --disable-failure-tokens \
+        --disable-xcrypt-compat-files \
+        --disable-obsolete-api \
+        --enable-hashes=strong,glibc \
+        CFLAGS="$optflags"
+}
