@@ -1,5 +1,5 @@
 pkgname=mutt
-pkgver=2.2.10
+pkgver=2.2.11
 arcurlbase=http://ftp.mutt.org/pub/mutt/
 run_deps="cyrus-sasl ncurses openssl zlib"
 
