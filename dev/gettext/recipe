@@ -7,12 +7,6 @@ run_deps="acl attr ncurses"
 # configure 生成のためだけにインストールする。
 
 _patch () {
-    # libtextstyle.so に RPATH を埋め込まない。configure 時
-    # の LT_SYS_LIBRARY_PATH= がここだけ効かないようなので。
-    sed -i.orig \
-        's@eval "*\([^=]*\).*\$hardcode_libdir_flag_spec@\1=; [ "$libdir" = "'$prefix/lib'" ] || &@' \
-        libtextstyle/build-aux/ltmain.sh &&
-
     # examples をインストールしない。
     sed -i.orig \
         '/^SUBDIRS =/s/[[:blank:]]*examples//' \
@@ -75,6 +69,7 @@ _config () {
         --disable-silent-rules \
         --disable-static \
         --disable-nls \
+        --disable-rpath \
         --disable-java \
         --disable-csharp \
         --disable-c++ \
