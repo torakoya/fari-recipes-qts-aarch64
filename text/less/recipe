@@ -1,5 +1,5 @@
 pkgname=less
-pkgver=633
+pkgver=643
 arcurlbase=http://www.greenwoodsoftware.com/less/
 run_deps="ncursesw"
 
@@ -14,10 +14,10 @@ _config () {
         CFLAGS="$optflags"
 }
 
-# 632 からテストが実装されたっぽいがとりあえずスキップする。lesstest/
-# にテストがある想定のようだが配布物には含まれていなくてコケる。あと
-# -DLESSTEST をつけてソースコードをいちからビルドしなおすのでバイナリ
-# が変わってしまう。
+# テストはとりあえずスキップする。-DLESSTEST をつけてソースコードを
+# いちからビルドしなおすのでバイナリが変わってしまう。
 _test () {
-    :
+    # CPATH= は lesstest/display.c のビルドで termcap.h が見つからない
+    # というエラーになるので。
+    : CPATH="$prefix"/include/ncurses make check "$@"
 }
