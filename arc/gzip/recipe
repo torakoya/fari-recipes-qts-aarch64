@@ -1,5 +1,5 @@
 pkgname=gzip
-pkgver=1.12
+pkgver=1.13
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/gzip/
 
