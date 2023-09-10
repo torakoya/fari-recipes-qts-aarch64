@@ -1,11 +1,8 @@
 pkgname=jq
-pkgver=1.6
-arcurlbase=https://github.com/stedolan/jq/releases/download/jq-$pkgver/
+pkgver=1.7
+arcurlbase=https://github.com/jqlang/jq/releases/download/jq-$pkgver/
 
 _config () {
-    # --disable-maintainer-mode: Makefile にメンテナ向けの
-    # ルールを含めない。
-
     # --without-oniguruma: 鬼車は使わない。使わないと正規表現が
     # まったく使えなくなる。鬼車を使うソフトウェアをほかに
     # インストールしていないから鬼車はインストールしていない。
@@ -19,8 +16,7 @@ _config () {
 
     # --disable-docs: man ページを（再）ビルドしない。プリビルド
     # されたものが同梱されているのでビルドは不要。ビルドには
-    # Ruby が必要。公式ウェブサイトをつくるための要件も含まれて
-    # いるので準備が重い。
+    # Python（とライブラリ；jsonschema と yaml か）が必要。
 
     # --disable-shared: libjq の共有ライブラリはつくらない。
     # libjq はほかのソフトウェアで使わないし，このソフトウェアの
@@ -36,7 +32,6 @@ _config () {
     ./configure \
         --prefix="$prefix" \
         --disable-silent-rules \
-        --disable-maintainer-mode \
         --disable-shared \
         --disable-docs \
         --without-oniguruma \
@@ -45,5 +40,5 @@ _config () {
 
 _install () {
     # libjq のライブラリとヘッダのインストールを回避する。
-    make install lib_LTLIBRARIES= include_HEADERS= "$@"
+    make install lib_LTLIBRARIES= pkgconfig_DATA= include_HEADERS= "$@"
 }
