@@ -1,5 +1,5 @@
 pkgname=nghttp2
-pkgver=1.55.1
+pkgver=1.56.0
 arcext=tar.xz
 arcurlbase=https://github.com/nghttp2/nghttp2/releases/download/v$pkgver/
 
