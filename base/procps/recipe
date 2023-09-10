@@ -1,5 +1,5 @@
 pkgname=procps
-pkgver=4.0.3
+pkgver=4.0.4
 arcext=tar.xz
 arcname=procps-ng
 arcurlbase=https://downloads.sourceforge.net/project/procps-ng/Production/
@@ -28,9 +28,6 @@ _config () {
     # --enable-watch8bit: watch で 8 ビット文字が表示される
     # ようにする。
 
-    # CPPFLAGS=...: slabtop と top のコンパイルに ncurses の
-    # ためのフラグが使われないのでここで与える。
-
     # ac_cv_func_pidfd_open=no: システムがシステムコール
     # pidfd_open を持っていないと指定する。QTS はカーネルが
     # 4.2.8 で pidfd_open を持っていないが，glibc が 2.36 から
@@ -47,7 +44,6 @@ _config () {
         --disable-modern-top \
         --enable-watch8bit \
         ac_cv_func_pidfd_open=no \
-        CPPFLAGS="$(pkg-config --cflags ncurses)" \
         CFLAGS="$optflags" \
         LT_SYS_LIBRARY_PATH="$prefix"/lib
 }
