@@ -1,0 +1,27 @@
+pkgname=pkgconf
+pkgver=2.0.3
+arcext=tar.xz
+arcurlbase=https://distfiles.ariadne.space/pkgconf/
+
+# テストは kyua が必要。
+
+_config () {
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
+
+_install () {
+    make install "$@" &&
+
+    {
+        if [ -e "$DESTDIR$prefix"/bin/pkg-config ]; then
+            echo "$pkgname: warning: "$DESTDIR$prefix"/bin/pkg-config: already exists; symlinking canceled" >&2
+        else
+            fr_do ln -s pkgconf "$DESTDIR$prefix"/bin/pkg-config
+        fi
+    }
+}
