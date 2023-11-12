@@ -1,5 +1,5 @@
 pkgname=whois
-pkgver=5.5.19
+pkgver=5.5.20
 arcext=tar.xz
 srcname=$pkgname
 arcfile=${pkgname}_$pkgver.$arcext
