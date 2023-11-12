@@ -1,12 +1,9 @@
 pkgname=python
-pkgver=3.11.5
+pkgver=3.12.0
 arcname=Python
 arcext=tar.xz
 arcurlbase=https://www.python.org/ftp/python/"$pkgver"/
 run_deps="bzip2 expat gdbm libffi libxcrypt ncursesw openssl readline sqlite xz zlib"
-
-# --with-system-ffi は渡さなくても yes になった。渡すと警告が出た：
-# configure: WARNING: --with(out)-system-ffi is ignored on this platform
 
 # --with-lto すると -g がつく（configure の LTOFLAGS を参照のこと）。
 # テストを通すためらしい：
@@ -28,12 +25,13 @@ run_deps="bzip2 expat gdbm libffi libxcrypt ncursesw openssl readline sqlite xz 
 # configure の --with-ensurepip=... を make install 時に変更したければ
 # make install ENSUREPIP=... でできるようだ。
 
-_patch () {
-    # ncursesw のヘッダファイルの探し場所を /usr/include/ncursesw から変更
-    sed -i.orig 's|/usr\(/include/ncursesw\)|'"$prefix"'\1|' configure setup.py
-}
-
 _config () {
+    # CPPFLAGS=: configure 中 curses を使えるかどうかダミーのコードを
+    # コンパイルして調べるときに，なぜか pkg-config や CURSES_CFLAGS=
+    # を見てくれないため。--cflags-only-I ではなく --cflags だと，
+    # 結果に -D_XOPEN_SOURCE=600 が含まれ，ビルド時に pyconfig.h で
+    # _XOPEN_SOURCE が再定義されていると警告される。
+
     ./configure \
         --prefix="$prefix" \
         --enable-shared \
@@ -41,30 +39,13 @@ _config () {
         --with-lto \
         --with-system-expat \
         --with-ensurepip=no \
+        CPPFLAGS="$(pkg-config --cflags-only-I ncursesw)" \
+        LIBREADLINE_LIBS="$(pkg-config --libs readline) -lncursesw" \
         OPT="$optflags"
 }
 
-_build () {
-    # SETUPTOOLS_USE_DISTUTILS=stdlib はいまビルドしている
-    # Python が持っている distutils を使わせる。既定値
-    # （=local）は，すでにどこかにインストールされている
-    # setuptools に同梱の distutils を使う。その場合，その
-    # distutils（と Python の標準ライブラリ？）に非互換性が
-    # あるとうまく動かない。
-    #
-    # Python インストール中は =stdlib を最初から設定してくれて
-    # いるべきのような気がするけどなあ。というかそもそも
-    # Python のインストール中に外部にインストールされた
-    # モジュールを使うべきでない気がする。
-    #
-    # * https://github.com/pypa/setuptools/issues/3007
-    # * https://github.com/pypa/setuptools/pull/2896
-
-    SETUPTOOLS_USE_DISTUTILS=stdlib make "$@"
-}
-
 _test () {
-    SETUPTOOLS_USE_DISTUTILS=stdlib make test
+    make test
 }
 
 _install () {
