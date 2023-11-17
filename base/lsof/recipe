@@ -1,40 +1,27 @@
 pkgname=lsof
-pkgver=4.98.0
-arcurl=https://github.com/lsof-org/lsof/archive/refs/tags/"$pkgver".tar.gz
+pkgver=4.99.0
+arcurlbase=https://github.com/lsof-org/lsof/releases/download/$pkgver/
 build_deps="groff" # soelim
 
-# make のいろいろな変数は，ビルド環境の情報をバイナリに埋め込む
-# （lsof -v で表示される）のをやめさせるため。
-
-# テストは失敗する。
-
 _config () {
-    LSOF_INCLUDE="$prefix"/include \
-    LINUX_INCL="$prefix"/include \
-    ./Configure -n linux
-}
+    # --disable-shared: liblsof はコマンド lsof でしか使わないので
+    # 共有ライブラリはビルドしない。（かつ静的ライブラリはインストール
+    # 時の指定によってインストールを抑制する。）
 
-__make () {
-    make \
-        LSOF_HOST=none \
-        LSOF_LOGNAME=none \
-        LSOF_SYSINFO=none \
-        LSOF_USER=none \
-        "$@"
-}
+    # SOURCE_DATE_EPOCH=: ビルド環境の情報をバイナリに埋め込む（lsof
+    # -v で表示される）のを抑制する。
 
-_build () {
-    __make DEBUG="$optflags"
-}
-
-_test () {
-    # バイナリが再コンパイルされるので最適化オプションをつける
-    __make check DEBUG="$optflags"
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-shared \
+        SOURCE_DATE_EPOCH=0 \
+        CFLAGS="$optflags"
 }
 
 _install () {
-    fr_do mkdir -p \"$DESTDIR/$prefix\"/bin &&
-    fr_do install lsof \"$DESTDIR/$prefix\"/bin &&
-    fr_do mkdir -p \"$DESTDIR/$prefix\"/share/man/man8 &&
-    fr_do soelim Lsof.8 \> \"$DESTDIR/$prefix\"/share/man/man8/lsof.8
+    # include_HEADERS= lib_LTLIBRARIES=: ヘッダファイルとライブラリの
+    # インストールを抑制する。
+
+    make install include_HEADERS= lib_LTLIBRARIES= "$@"
 }
