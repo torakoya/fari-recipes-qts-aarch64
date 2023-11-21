@@ -1,5 +1,5 @@
 pkgname=libgcrypt
-pkgver=1.10.2
+pkgver=1.10.3
 arcext=tar.bz2
 arcurlbase=https://gnupg.org/ftp/gcrypt/libgcrypt/
 run_deps="libgpg-error"
