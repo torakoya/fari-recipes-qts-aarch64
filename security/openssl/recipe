@@ -1,5 +1,5 @@
 pkgname=openssl
-pkgver=3.1.4
+pkgver=3.2.0
 arcurlbase=https://www.openssl.org/source/
 build_deps=perl
 run_deps=zlib
@@ -22,9 +22,6 @@ _patch () {
     sed -i \
         '/^install_docs:/s/ *install_html_docs//' \
         Configurations/unix-Makefile.tmpl
-
-    # ビルド日時（openssl version -a などで見られる）を消す
-    sed -i.orig 's/\($date\s*=\s*\).*;/\1"-";/' util/mkbuildinf.pl
 }
 
 _config () {
@@ -34,6 +31,16 @@ _config () {
         shared \
         zlib-dynamic \
         CFLAGS="$optflags"
+}
+
+_build () {
+    # SOURCE_DATE_EPOCH: ビルド日時（openssl version -a などで見られる）
+    # を固定する。Perl で偽として評価される文字列値を渡すと現在日時が
+    # 使われてしまう（util/mkbuildinf.pl 参照）ので，「0」ではダメ。
+    # 「-0」としたが，ちゃんとした日時（OpenSSL のこのバージョンの
+    # リリース日時とか）を渡すほうがいいのかも。
+
+    SOURCE_DATE_EPOCH=-0 make "$@"
 }
 
 _test () {
