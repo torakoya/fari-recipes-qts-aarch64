@@ -1,5 +1,5 @@
 pkgname=perl
-pkgver=5.38.0
+pkgver=5.38.1
 arcext=tar.xz
 arcurlbase=https://www.cpan.org/src/5.0/
 run_deps="bzip2 gdbm libxcrypt zlib"
@@ -78,6 +78,10 @@ _build () {
 _test () {
     # t/op/magic.t は BusyBox の ps では失敗する。コマンド
     # ラインオプションが期待どおりではないため。
+
+    # 5.38.1: 同梱の META.json がリリース用に更新されていないため，
+    # porting/regen.t が失敗する。出力メッセージにあるとおり，
+    # Porting/makemeta を実行すると直る。
 
     make test "$@"
 }
