@@ -1,5 +1,5 @@
 pkgname=pkgconf
-pkgver=2.0.3
+pkgver=2.1.0
 arcext=tar.xz
 arcurlbase=https://distfiles.ariadne.space/pkgconf/
 
