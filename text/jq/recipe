@@ -1,5 +1,5 @@
 pkgname=jq
-pkgver=1.7
+pkgver=1.7.1
 arcurlbase=https://github.com/jqlang/jq/releases/download/jq-$pkgver/
 
 _config () {
@@ -26,8 +26,6 @@ _config () {
     # テストは Valgrind が必要。なくても実行できるが一部のテスト
     # が実行されないのかもしれない。まあ Valgrind で実行される
     # たぐいのテストなら jq では実施しなくてもまだいいか。
-    #
-    # テストは鬼車のテストが失敗する。
 
     ./configure \
         --prefix="$prefix" \
