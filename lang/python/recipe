@@ -1,5 +1,5 @@
 pkgname=python
-pkgver=3.12.0
+pkgver=3.12.1
 arcname=Python
 arcext=tar.xz
 arcurlbase=https://www.python.org/ftp/python/"$pkgver"/
