@@ -1,5 +1,5 @@
 pkgname=tzdata
-pkgver=2023c
+pkgver=2023d
 arcname=tzdb
 arcext=tar.lz
 arcurlbase=https://data.iana.org/time-zones/releases/
@@ -14,7 +14,10 @@ _build () {
     # 使えそうだが，TOPDIR はその値がコマンドやライブラリに
     # 埋め込まれてしまう。
 
-    make DESTDIR="$workdir"/dest install
+    # CC=: 既定値は c99。生成物はインストールされないのでまあ最適化
+    # フラグは指定しないでいいだろう。
+
+    make DESTDIR="$workdir"/dest CC=cc install
 }
 
 # make check はアーカイブを展開してすぐに実行できてしまう。
