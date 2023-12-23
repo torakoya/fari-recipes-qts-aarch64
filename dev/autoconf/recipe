@@ -1,5 +1,5 @@
 pkgname=autoconf
-pkgver=2.71
+pkgver=2.72
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/autoconf/
 
