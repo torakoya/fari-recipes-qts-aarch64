@@ -1,5 +1,5 @@
 pkgname=attr
-pkgver=2.5.1
+pkgver=2.5.2
 arcext=tar.xz
 arcurlbase=https://download.savannah.nongnu.org/releases/attr/
 test_deps=perl
