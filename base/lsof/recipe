@@ -1,27 +1,16 @@
 pkgname=lsof
-pkgver=4.99.0
+pkgver=4.99.3
 arcurlbase=https://github.com/lsof-org/lsof/releases/download/$pkgver/
 build_deps="groff" # soelim
 
 _config () {
-    # --disable-shared: liblsof はコマンド lsof でしか使わないので
-    # 共有ライブラリはビルドしない。（かつ静的ライブラリはインストール
-    # 時の指定によってインストールを抑制する。）
-
     # SOURCE_DATE_EPOCH=: ビルド環境の情報をバイナリに埋め込む（lsof
     # -v で表示される）のを抑制する。
 
     ./configure \
         --prefix="$prefix" \
         --disable-silent-rules \
-        --disable-shared \
+        --disable-liblsof \
         SOURCE_DATE_EPOCH=0 \
         CFLAGS="$optflags"
-}
-
-_install () {
-    # include_HEADERS= lib_LTLIBRARIES=: ヘッダファイルとライブラリの
-    # インストールを抑制する。
-
-    make install include_HEADERS= lib_LTLIBRARIES= "$@"
 }
