@@ -1,5 +1,5 @@
 pkgname=bc-gh
-pkgver=6.7.4
+pkgver=6.7.5
 arcname=bc
 arcext=tar.xz
 arcurlbase=https://github.com/gavinhoward/bc/releases/download/$pkgver/
