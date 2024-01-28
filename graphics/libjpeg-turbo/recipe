@@ -1,6 +1,6 @@
 pkgname=libjpeg-turbo
-pkgver=3.0.1
-arcurlbase=https://downloads.sourceforge.net/project/libjpeg-turbo/$pkgver/
+pkgver=3.0.2
+arcurlbase=https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/$pkgver/
 build_deps="cmake"
 
 blddir=$workdir/objdir
