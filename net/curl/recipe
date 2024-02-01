@@ -1,5 +1,5 @@
 pkgname=curl
-pkgver=8.5.0
+pkgver=8.6.0
 arcext=tar.xz
 arcurlbase=https://curl.se/download/
 run_deps="libidn2 nghttp2 openssl zlib zstd"
@@ -15,6 +15,7 @@ _config () {
         --without-ca-path \
         --with-ca-fallback \
         --with-nghttp2 \
+        --without-libpsl \
         CFLAGS="$optflags" \
         LT_SYS_LIBRARY_PATH="$prefix"/lib
 }
