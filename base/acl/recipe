@@ -1,5 +1,5 @@
 pkgname=acl
-pkgver=2.3.1
+pkgver=2.3.2
 arcext=tar.xz
 arcurlbase=https://download.savannah.nongnu.org/releases/acl/
 run_deps=attr
