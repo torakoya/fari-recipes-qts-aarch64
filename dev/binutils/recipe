@@ -1,5 +1,5 @@
 pkgname=binutils
-pkgver=2.41
+pkgver=2.42
 arcext=tar.lz
 arcurlbase=https://ftpmirror.gnu.org/binutils/
 blddir=$workdir/objdir
