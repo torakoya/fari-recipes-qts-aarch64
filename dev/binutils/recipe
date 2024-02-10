@@ -88,8 +88,7 @@ _config () {
         --with-lib-path="$prefix"/lib \
         --enable-deterministic-archives \
         CFLAGS="$optflags" \
-        CXXFLAGS="$optflags" \
-        LDFLAGS=-Wl,--enable-new-dtags
+        CXXFLAGS="$optflags"
 }
 
 _build () {
