@@ -1,5 +1,5 @@
 pkgname=libffi
-pkgver=3.4.4
+pkgver=3.4.5
 arcurlbase=https://github.com/libffi/libffi/releases/download/v$pkgver/
 
 _config () {
