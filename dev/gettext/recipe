@@ -1,5 +1,5 @@
 pkgname=gettext
-pkgver=0.22.4
+pkgver=0.22.5
 arcext=tar.lz
 arcurlbase=https://ftpmirror.gnu.org/gettext/
 run_deps="acl attr ncurses"
