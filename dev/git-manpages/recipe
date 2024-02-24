@@ -1,5 +1,5 @@
 pkgname=git-manpages
-pkgver=2.43.2
+pkgver=2.44.0
 arcext=tar.xz
 arcurlbase=https://mirrors.edge.kernel.org/pub/software/scm/git/
 
