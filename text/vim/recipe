@@ -1,5 +1,5 @@
 pkgname=vim
-pkgver=9.1.0115
+pkgver=9.1.0130
 arcurl=https://github.com/vim/vim/archive/refs/tags/v$pkgver.$arcext
 run_deps="acl attr ncursesw"
 
