@@ -1,5 +1,5 @@
 pkgname=expat
-pkgver=2.6.1
+pkgver=2.6.2
 arcext=tar.lz
 arcurlbase=https://github.com/libexpat/libexpat/releases/download/R_$(echo $pkgver | tr . _)/
 
