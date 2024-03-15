@@ -1,5 +1,5 @@
 pkgname=bmake
-pkgver=20240301
+pkgver=20240309
 srcname=$pkgname
 arcurlbase=http://www.crufty.net/ftp/pub/sjg/
 
@@ -16,11 +16,6 @@ _patch () {
     sed -i.orig \
         '/^op_install/,/^$/s/op_test/#&/' \
         boot-strap &&
-
-    # cat ページではなく man ページをインストールする。
-    sed -i.orig \
-        's/\(^MANTARGET[[:blank:]]*=[[:blank:]]*\)cat/\1man/' \
-        Makefile &&
 
     # テストのうち cmd-interrupt と deptgt-interrupt を飛ばす。
     # 出力が期待とは違うので失敗する。
