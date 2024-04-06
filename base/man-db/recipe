@@ -1,5 +1,5 @@
 pkgname=man-db
-pkgver=2.12.0
+pkgver=2.12.1
 arcext=tar.xz
 arcurlbase=https://download.savannah.nongnu.org/releases/man-db/
 build_deps="pkg-config"
