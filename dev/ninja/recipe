@@ -1,36 +1,39 @@
 pkgname=ninja
-pkgver=1.11.1
+pkgver=1.12.0
 arcurl=https://github.com/ninja-build/ninja/archive/refs/tags/v$pkgver.$arcext
 
-build_deps="python"
+build_deps="cmake"
+run_deps="python"
+blddir=$workdir/objdir
 
 _config () {
-    :
-}
-
-_build () {
     # README には同梱の configure.py を使う方法と CMake を使う方法が
-    # 紹介されているが，Wiki には configure.py の話だけ。そちらにして
-    # おくか。
+    # 紹介されているが，CMake を使うことにする。1.12.0 では
+    # configure.py はユニットテスト用のコマンド ninja_test がビルド
+    # されなくなった。また，configure.py で作成される build.ninja には
+    # ターゲット install が存在しないが，CMake で作成される Makefile
+    # には存在している。
 
-    # --bootstrap で，いちど ninja がビルドされ，つづけてそれを使って
-    # ninja が再ビルドされる。
+    # CMAKE_INSTALL_LIBDIR= はライブラリのインストール場所が lib64/ に
+    # なるのを lib/ にする。ただし GoogleTest をインストールしなければ
+    # lib には何もインストールされない。
 
-    # 勝手に -O2 を指定されるが，CXXFLAGS がそれより後ろに足される
-    # （後ろが優先）からまあいいか。
+    # INSTALL_GTEST= は GoogleTest のインストールを抑制する。
+    # cmake -LAH によると "Projects embedding googletest may want to
+    # turn this OFF." とのことなので抑制しておく。
 
-    CXXFLAGS="$optflags" python3 configure.py --bootstrap --verbose
+    cmake \
+        -DCMAKE_INSTALL_PREFIX="$prefix" \
+        -DCMAKE_VERBOSE_MAKEFILE=1 \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_CXX_FLAGS_RELEASE="$optflags -DNDEBUG" \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+        -DINSTALL_GTEST=0 \
+        -DNINJA_PYTHON=python3 \
+        -DPYTHON_EXECUTABLE="$prefix"/bin/python3 \
+        "$srcdir"
 }
 
 _test () {
-    ./ninja ninja_test && ./ninja_test --gtest_filter=MyTest.Name
-}
-
-# とりあえず doc/ と misc/ の中身をすべて入れておく。
-_install () {
-    fr_do mkdir -p \"$DESTDIR$prefix\"/bin &&
-    fr_do install ninja \"$DESTDIR$prefix\"/bin &&
-    fr_do mkdir -p \"$DESTDIR$prefix\"/share/doc/ninja/misc &&
-    fr_do cp -R $(find misc -mindepth 1 -maxdepth 1 \! -name __pycache__ \! -name '*.pyc') \"$DESTDIR$prefix\"/share/doc/ninja/misc &&
-    fr_do cp -R doc \"$DESTDIR$prefix\"/share/doc/ninja
+    ./ninja_test "$@"
 }
