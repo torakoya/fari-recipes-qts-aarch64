@@ -1,5 +1,5 @@
 pkgname=ncurses
-pkgver=6.4
+pkgver=6.5
 arcurlbase=https://ftpmirror.gnu.org/ncurses/
 
 _config () {
