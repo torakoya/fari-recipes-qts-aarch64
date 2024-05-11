@@ -1,5 +1,5 @@
 pkgname=libjpeg-turbo
-pkgver=3.0.2
+pkgver=3.0.3
 arcurlbase=https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/$pkgver/
 build_deps="cmake"
 
