@@ -1,5 +1,5 @@
 pkgname=ninja
-pkgver=1.12.0
+pkgver=1.12.1
 arcurl=https://github.com/ninja-build/ninja/archive/refs/tags/v$pkgver.$arcext
 
 build_deps="cmake"
