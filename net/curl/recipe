@@ -1,5 +1,5 @@
 pkgname=curl
-pkgver=8.7.1
+pkgver=8.8.0
 arcext=tar.xz
 arcurlbase=https://curl.se/download/
 run_deps="libidn2 nghttp2 openssl zlib zstd"
@@ -22,4 +22,11 @@ _config () {
 
 _test () {
     make test "$@"
+}
+
+_install () {
+    make install "$@" &&
+
+    # 8.8.0: curl-config.1 のインストールが抜けている
+    fr_do cp docs/curl-config.1 \"$DESTDIR$prefix\"/share/man/man1
 }
