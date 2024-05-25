@@ -1,5 +1,5 @@
 pkgname=gcc
-pkgver=13.2.0
+pkgver=14.1.0
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/gcc/$pkgname-$pkgver/
 run_deps="gmp mpc mpfr zlib zstd"
@@ -37,7 +37,14 @@ _patch () {
         gcc/config/aarch64/aarch64-linux.h &&
 
     # gcc -v の Configured with: .../configure のパスを切り詰める
-    sed -i.orig '/^TOPLEVEL_CONFIGURE_ARGUMENTS=/,+1s|$progname|${progname##*/}|' configure
+    sed -i.orig '/^TOPLEVEL_CONFIGURE_ARGUMENTS=/,+1s|$progname|${progname##*/}|' configure &&
+
+    # libatomic のコンパイルで -march= に +lse を指定しない（-march=
+    # を丸ごと省く）。configure 時に -march= に +lse を指定して
+    # コンパイルできれば +lse をつけると判定しているが，LSE を持たない
+    # CPU でも LSE を使ったバイナリは生成できる（が実行できない）
+    # のだからそれはだめだろう。
+    sed -i.orig '/^@ARCH_AARCH64[^[:blank:]]*IFUNC_OPTIONS[[:blank:]]*=/s/-march=[^[:blank:]]*+lse//' libatomic/Makefile.in
 }
 
 # configure のオプションは INSTALL/configure.html を参照。
