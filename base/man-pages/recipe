@@ -1,5 +1,5 @@
 pkgname=man-pages
-pkgver=6.7
+pkgver=6.8
 arcext=tar.xz
 arcurlbase=https://mirrors.edge.kernel.org/pub/linux/docs/man-pages/
 
@@ -22,8 +22,5 @@ _test () {
 }
 
 _install () {
-    # SHELL=: 既定値の /usr/bin/env は BusyBox では -S がなくて
-    # エラーになる。
-
-    make install prefix="$prefix" SHELL="$prefix"/bin/env "$@"
+    make install prefix="$prefix" "$@"
 }
