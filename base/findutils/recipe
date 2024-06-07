@@ -1,5 +1,5 @@
 pkgname=findutils
-pkgver=4.9.0
+pkgver=4.10.0
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/findutils/
 
