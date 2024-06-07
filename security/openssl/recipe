@@ -1,6 +1,6 @@
 pkgname=openssl
-pkgver=3.3.0
-arcurlbase=https://www.openssl.org/source/
+pkgver=3.3.1
+arcurlbase=https://github.com/openssl/openssl/releases/download/openssl-$pkgver/
 build_deps=perl
 run_deps=zlib
 
