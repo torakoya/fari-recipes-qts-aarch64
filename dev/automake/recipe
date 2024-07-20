@@ -1,5 +1,5 @@
 pkgname=automake
-pkgver=1.16.5
+pkgver=1.17
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/automake/
 build_deps="autoconf"
