@@ -1,5 +1,5 @@
 pkgname=glibc
-pkgver=2.39
+pkgver=2.40
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/libc/
 blddir=$workdir/objdir
@@ -36,8 +36,16 @@ _config () {
     # LFS の libc_cv_slibdir=/lib は $prefix が /usr でなければ不要
     # （sysdeps/unix/sysv/linux/aarch64/configure を参照）。
 
+    # --disable-werror: -mcpu= を与えたときに，これが mathvec の SVE
+    # 版をコンパイルするときに指定される -march= と矛盾する警告を，
+    # エラーとして扱われないようにするため。
+    #
+    # この警告は名前がつけられていないようで，-Wno-error= で指定して
+    # これだけをエラー扱いにしないよう制御することはできない。
+
     "$srcdir"/configure \
         --prefix="$prefix" \
+        --disable-werror \
         CFLAGS="$optflags"
 }
 
