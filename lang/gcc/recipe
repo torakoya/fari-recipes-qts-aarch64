@@ -1,5 +1,5 @@
 pkgname=gcc
-pkgver=14.1.0
+pkgver=14.2.0
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/gcc/$pkgname-$pkgver/
 run_deps="gmp mpc mpfr zlib zstd"
