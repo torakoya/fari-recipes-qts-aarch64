@@ -1,11 +1,23 @@
 pkgname=ruby
-pkgver=3.3.4
+pkgver=3.3.5
 arcext=tar.xz
 arcurlbase=https://cache.ruby-lang.org/pub/ruby/${pkgver%.*}/
 run_deps="gmp libffi libxcrypt libyaml ncurses openssl readline zlib"
 
 # ビルド後，こう始まる出力を（あれば）確認しておく：
 #     *** Following extensions are not compiled:
+
+_patch () {
+    # 3.3.5: 同梱の RubyGems に，インストールされた gem のコマンドに
+    # ついて bin/*.lock が残ってしまうバグがある。これを修正する。
+    # 上流での修正: https://github.com/rubygems/rubygems/pull/7939
+    sed -i.orig \
+        -e '/\.lock/s/$/ |lock|/' \
+        -e '/\.lock/,/^    end/ { /^    end/i\
+      ensure FileUtils.rm_f lock.path
+}' \
+        lib/rubygems/installer.rb
+}
 
 _config () {
     # --with-baseruby= はビルド中に使われる既存の ruby。Ruby
