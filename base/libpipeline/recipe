@@ -1,5 +1,5 @@
 pkgname=libpipeline
-pkgver=1.5.7
+pkgver=1.5.8
 arcurlbase=https://download.savannah.nongnu.org/releases/libpipeline/
 
 # man-db のメンテナが man-db のためにつくったライブラリ。
