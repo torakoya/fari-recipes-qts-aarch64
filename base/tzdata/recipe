@@ -1,5 +1,5 @@
 pkgname=tzdata
-pkgver=2024a
+pkgver=2024b
 arcname=tzdb
 arcext=tar.lz
 arcurlbase=https://data.iana.org/time-zones/releases/
@@ -20,10 +20,8 @@ _build () {
     make DESTDIR="$workdir"/dest CC=cc install
 }
 
-# make check はアーカイブを展開してすぐに実行できてしまう。
-# 開発者向けなのかな。ということでテストは実行しない。
 _test () {
-    :
+    make DESTDIR="$workdir"/dest CC=cc check
 }
 
 _install () {
