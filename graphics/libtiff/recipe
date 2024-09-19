@@ -1,5 +1,5 @@
 pkgname=libtiff
-pkgver=4.6.0
+pkgver=4.7.0
 arcname=tiff
 arcext=tar.xz
 arcurlbase=https://download.osgeo.org/libtiff/
