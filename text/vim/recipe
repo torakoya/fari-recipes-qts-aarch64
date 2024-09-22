@@ -19,8 +19,13 @@ run_deps="acl attr ncursesw"
 
 # テストはいろいろ失敗する。flaky なものだけかな。
 
-# make install は DESTDIR を指定したときだけ share/applications と
-# share/icons が入る。
+_patch () {
+    # PREFIX/share/applications/ と PREFIX/share/icons/ をインストール
+    # しない。
+    sed -i.orig \
+        '/^install_normal:/s/[[:blank:]]*install-icons//' \
+        src/Makefile
+}
 
 _config () {
     ./configure \
@@ -40,11 +45,4 @@ _test () {
 _install () {
     make install "$@" &&
     fr_do ln -sf vim \"$DESTDIR/$prefix\"/bin/vi
-}
-
-fr_post_files () {
-    sed -i '
-        /^share\/applications/ d
-        /^share\/icons/ d
-    ' files
 }
