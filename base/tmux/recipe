@@ -1,11 +1,11 @@
 pkgname=tmux
-pkgver=3.4
+pkgver=3.5
 arcurlbase=https://github.com/tmux/tmux/releases/download/$pkgver/
 run_deps="libevent ncurses"
 
 _patch () {
     # ambiguous width な文字の幅を 2 にするなど
-    curl -L https://github.com/z80oolong/tmux-eaw-fix/raw/master/tmux-"$pkgver"-fix.diff | patch -p1 &&
+    curl -L https://github.com/z80oolong/tmux-eaw-fix/raw/refs/heads/master/tmux-"$pkgver"-fix.diff | patch -p1 &&
 
     # -O2 を決め打ちしない
     sed -i.orig '/am__append_1\s*=/s/\s*-O2//' Makefile.in
