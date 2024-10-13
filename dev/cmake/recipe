@@ -1,5 +1,5 @@
 pkgname=cmake
-pkgver=3.30.4
+pkgver=3.30.5
 arcurlbase=https://github.com/Kitware/CMake/releases/download/v$pkgver/
 
 run_deps="bzip2 curl expat ncurses xz zlib zstd"
