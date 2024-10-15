@@ -1,5 +1,5 @@
 pkgname=tmux
-pkgver=3.5
+pkgver=3.5a
 arcurlbase=https://github.com/tmux/tmux/releases/download/$pkgver/
 run_deps="libevent ncurses"
 
