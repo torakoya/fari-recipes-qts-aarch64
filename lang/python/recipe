@@ -1,9 +1,9 @@
 pkgname=python
-pkgver=3.12.7
+pkgver=3.13.0
 arcname=Python
 arcext=tar.xz
 arcurlbase=https://www.python.org/ftp/python/"$pkgver"/
-run_deps="bzip2 expat gdbm libffi libxcrypt ncursesw openssl readline sqlite xz zlib"
+run_deps="bzip2 expat gdbm libffi ncursesw openssl readline sqlite xz zlib"
 
 # --with-lto すると -g がつく（configure の LTOFLAGS を参照のこと）。
 # テストを通すためらしい：
@@ -25,6 +25,14 @@ run_deps="bzip2 expat gdbm libffi libxcrypt ncursesw openssl readline sqlite xz 
 # configure の --with-ensurepip=... を make install 時に変更したければ
 # make install ENSUREPIP=... でできるようだ。
 
+_patch () {
+    # テスト（ビルド中にも実行される）で探される zoneinfo の場所を
+    # /usr 下から PREFIX 下に修正する。
+    sed -i.orig \
+        's|/usr/share|'"$prefix"'/share|' \
+        Lib/test/datetimetester.py
+}
+
 _config () {
     # --with-tzpath=: zoneinfo/ の場所。$prefix は見てくれないので明示
     # する（かつほかの場所は見ないようにする）。既定値は /usr の
@@ -44,7 +52,6 @@ _config () {
         --with-tzpath="$prefix"/share/zoneinfo \
         --with-system-expat \
         --with-ensurepip=no \
-        CPPFLAGS="$(pkg-config --cflags-only-I ncursesw)" \
         LIBREADLINE_LIBS="$(pkg-config --libs readline) -lncursesw" \
         OPT="$optflags"
 }
