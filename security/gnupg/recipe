@@ -1,5 +1,5 @@
 pkgname=gnupg
-pkgver=2.5.1
+pkgver=2.4.6
 arcext=tar.bz2
 arcurlbase=https://gnupg.org/ftp/gcrypt/gnupg/
 run_deps="bzip2 libassuan libgcrypt libgpg-error libksba ncurses npth pinentry readline zlib"
@@ -11,10 +11,10 @@ run_deps="bzip2 libassuan libgcrypt libgpg-error libksba ncurses npth pinentry r
 
 _patch () {
     # help*.txt は英語だけインストールする。
-    sed -i.orig 's/help\.[A-Za-z_]*\.txt//g' doc/Makefile.in
+    sed -i.orig 's/help\.[A-Za-z_]*\.txt//g' doc/Makefile.in &&
 
     # HTML 形式の man ページはインストールしない。
-    sed -i '/^install-man:/s/[[:blank:]]*install-manh//' doc/Makefile.in
+    sed -i '/^install-man[[:blank:]]*:/s/[[:blank:]]*install-manh//' doc/Makefile.in
 }
 
 _config () {
