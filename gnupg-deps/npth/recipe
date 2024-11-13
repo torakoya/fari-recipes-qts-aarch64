@@ -1,16 +1,7 @@
 pkgname=npth
-pkgver=1.7
+pkgver=1.8
 arcext=tar.bz2
 arcurlbase=https://gnupg.org/ftp/gcrypt/npth/
-
-# 1.7: lib/pkgconfig/npth.pc をインストールするようになった。代わりに
-# （なのだろうか）bin/npth-config をインストールしなくなった（configure
-# オプションでインストールさせることもできる）。今後は npth-config
-# ではなく pkg-config を使うようにしたいのだろうか。
-#
-# 現行の GnuPG は npth.pc でも行ける。nPth を見つけるのに npth-config
-# を使うほかに gpgrt-config も使ってくれる。gpgrt-config が {MODULE}.pc
-# を見てくれる。gpgrt-config は libgpg-error がインストールするもの。
 
 _config () {
     ./configure \
