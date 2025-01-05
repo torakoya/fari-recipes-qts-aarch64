@@ -1,5 +1,5 @@
 pkgname=procps
-pkgver=4.0.4
+pkgver=4.0.5
 arcext=tar.xz
 arcname=procps-ng
 arcurlbase=https://downloads.sourceforge.net/project/procps-ng/Production/
@@ -28,12 +28,9 @@ _config () {
     # --enable-watch8bit: watch で 8 ビット文字が表示される
     # ようにする。
 
-    # ac_cv_func_pidfd_open=no: システムがシステムコール
-    # pidfd_open を持っていないと指定する。QTS はカーネルが
-    # 4.2.8 で pidfd_open を持っていないが，glibc が 2.36 から
-    # pidfd のラッパ（include/sys/pidfd.h）をインストールする
-    # ようになったため，configure に自動判別させると
-    # pidfd_open を持っていると誤解してしまう。
+    # --disable-pidwait: pidwait をビルドしない。pidwait は
+    # pidfd_open を要求するが，QTS はカーネルが 4.2.8 でこれを
+    # 持っていない。
 
     ./configure \
         --prefix="$prefix" \
@@ -43,7 +40,7 @@ _config () {
         --disable-kill \
         --disable-modern-top \
         --enable-watch8bit \
-        ac_cv_func_pidfd_open=no \
+        --disable-pidwait \
         CFLAGS="$optflags" \
         LT_SYS_LIBRARY_PATH="$prefix"/lib
 }
