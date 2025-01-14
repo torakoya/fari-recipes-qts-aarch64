@@ -1,5 +1,5 @@
 pkgname=p7zip
-pkgver=17.05
+pkgver=17.06
 arcurl=https://github.com/p7zip-project/p7zip/archive/refs/tags/v$pkgver.$arcext
 
 # コマンドは単一バイナリ（動的ライブラリをインストールしない）
@@ -10,8 +10,8 @@ arcurl=https://github.com/p7zip-project/p7zip/archive/refs/tags/v$pkgver.$arcext
 # SFX（self-extracting archive）は有効にしない。
 
 _patch () {
-    # 17.05: バージョン表示を修正する。
-    sed -i.orig -e '/MY_VERSION /s/04/05/' -e '/P7ZIP_VERSION/s/04/05/' C/7zVersion.h &&
+    # 17.06: バージョン表示を修正する。
+    sed -i.orig -e '/MY_VERSION /s/05/06/' -e '/P7ZIP_VERSION/s/05/06/' C/7zVersion.h &&
 
     # SFX のテスト（とそれにともなうビルド）を回避する。
     sed -i.orig '/^test:/s/[[:blank:]]*sfx//' makefile.common &&
