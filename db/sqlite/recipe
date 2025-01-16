@@ -1,9 +1,9 @@
 pkgname=sqlite
-pkgver=3.47.2
+pkgver=3.48.0
 arcname=sqlite-autoconf
 srcname=$arcname-$(printf '%d%02d%02d%02d' $(echo $pkgver | tr . ' '))
 arcfile=$srcname.$arcext
-arcurlbase=https://www.sqlite.org/2024/
+arcurlbase=https://www.sqlite.org/2025/
 run_deps="ncurses readline zlib"
 
 _config () {
