@@ -1,5 +1,5 @@
 pkgname=libxcrypt
-pkgver=4.4.37
+pkgver=4.4.38
 arcext=tar.xz
 arcurlbase=https://github.com/besser82/libxcrypt/releases/download/v$pkgver/
 
