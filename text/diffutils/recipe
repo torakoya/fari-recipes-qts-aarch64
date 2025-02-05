@@ -1,5 +1,5 @@
 pkgname=diffutils
-pkgver=3.10
+pkgver=3.11
 arcext=tar.xz
 arcurlbase=https://ftpmirror.gnu.org/diffutils/
 
