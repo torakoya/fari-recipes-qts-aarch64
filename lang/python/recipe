@@ -38,12 +38,6 @@ _config () {
     # する（かつほかの場所は見ないようにする）。既定値は /usr の
     # いろいろ（/usr/share/zoneinfo など）と /etc/zoneinfo かな。
 
-    # CPPFLAGS=: configure 中 curses を使えるかどうかダミーのコードを
-    # コンパイルして調べるときに，なぜか pkg-config や CURSES_CFLAGS=
-    # を見てくれないため。--cflags-only-I ではなく --cflags だと，
-    # 結果に -D_XOPEN_SOURCE=600 が含まれ，ビルド時に pyconfig.h で
-    # _XOPEN_SOURCE が再定義されていると警告される。
-
     ./configure \
         --prefix="$prefix" \
         --enable-shared \
