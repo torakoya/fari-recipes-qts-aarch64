@@ -1,5 +1,5 @@
 pkgname=pcre2
-pkgver=10.44
+pkgver=10.45
 arcext=tar.bz2
 arcurlbase=https://github.com/PhilipHazel/pcre2/releases/download/pcre2-$pkgver/
 
