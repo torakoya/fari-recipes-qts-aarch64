@@ -1,0 +1,56 @@
+pkgname=util-linux
+pkgver=2.40.4
+arcext=tar.xz
+arcurlbase=https://www.kernel.org/pub/linux/utils/util-linux/v$(echo $pkgver | cut -d. -f1-2)/
+run_deps="libxcrypt ncursesw readline zlib"
+
+# cal(1) のためにインストールする。しかしそれ以外にもあまりにも
+# たくさんのコマンドが入る。知らないものも多くて取捨選択がめんどう
+# なので，とりあえず入るものはぜんぶ入れる。
+
+_patch () {
+    # make install 時の，所有者が root であるべきコマンドの
+    # `chown root:root` をやめさせる。QTS では管理者は root:root では
+    # ないし，どうせ管理者で make install すれば自然と管理者が所有者に
+    # なるので。
+    sed -i.orig \
+        '/chown root:root/d' \
+        Makefile.in &&
+
+    # -lreadline に -lncursesw を併せる。
+    sed -i.orig \
+        '/LIBS.*-lreadline/s/-lreadline/& -lncursesw/' \
+        configure
+}
+
+_config () {
+    # --disable-kill
+    # kill(1) は Coreutils のものを使う。
+
+    # --disable-use-tty-group
+    # wall と write をグループ tty に setgid するのをやめさせる。
+
+    # --disable-liblastlog2
+    # liblastlog2 と lastlog2 のビルドをやめることで libsqlite3 への
+    # 依存を消す。
+
+    # --without-python
+    # Python への依存を消す。
+
+    # --without-libmagic
+    # libmagic を使うのをやめさせる。libmagic を使うのは more(1) だけ
+    # のようだ。
+
+    ./configure \
+        --prefix="$prefix" \
+        --disable-silent-rules \
+        --disable-static \
+        --disable-nls \
+        --disable-kill \
+        --disable-use-tty-group \
+        --disable-liblastlog2 \
+        --without-python \
+        --without-libmagic \
+        CFLAGS="$optflags" \
+        LT_SYS_LIBRARY_PATH="$prefix"/lib
+}
