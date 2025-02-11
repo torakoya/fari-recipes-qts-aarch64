@@ -1,10 +1,22 @@
 pkgname=sqlite
-pkgver=3.48.0
+pkgver=3.49.0
 arcname=sqlite-autoconf
 srcname=$arcname-$(printf '%d%02d%02d%02d' $(echo $pkgver | tr . ' '))
 arcfile=$srcname.$arcext
 arcurlbase=https://www.sqlite.org/2025/
 run_deps="ncurses readline zlib"
+
+_patch () {
+    # PREFIX/lib を RPATH に埋め込むのをやめさせる。
+    sed -i.orig \
+        's/@LDFLAGS_RPATH@/# &/' \
+        Makefile.in &&
+
+    # コマンドに libsqlite3.so をリンクする。
+    sed -i \
+        's/shell\.c sqlite3\.c/shell.c libsqlite3.so/' \
+        Makefile.in
+}
 
 _config () {
     # SQLITE_ENABLE_COLUMN_METADATA はたしか Rails で必要に
@@ -14,15 +26,13 @@ _config () {
     #
     # https://www.sqlite.org/compile.html
 
-    # --disable-static-shell は bin/sqlite3 に libsqlite3 を
-    # 動的にリンクする。
+    # --soname=legacy
+    # 共有ライブラリに 3.48.0 までとおなじ soname を埋め込む。
 
     ./configure \
         --prefix="$prefix" \
-        --disable-silent-rules \
         --disable-static \
-        --disable-static-shell \
+        --soname=legacy \
         CFLAGS="$optflags" \
-        LT_SYS_LIBRARY_PATH="$prefix"/lib \
         CPPFLAGS=-DSQLITE_ENABLE_COLUMN_METADATA
 }
