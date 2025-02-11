@@ -34,9 +34,6 @@ run_deps="zlib zstd"
 #
 # $prefix/lib/../lib は gprofng がそういうパスを埋め込むので。
 
-# --enable-new-dtags は $prefix/lib/gprofng にインストール
-# される gprofng のライブラリのため。
-
 # LEXLIB= は ar と ranlib が libfl が不要なのにリンクしてしまうのを
 # 避けるため。
 
