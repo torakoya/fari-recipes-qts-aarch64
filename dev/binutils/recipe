@@ -1,5 +1,5 @@
 pkgname=binutils
-pkgver=2.43.1
+pkgver=2.44
 arcext=tar.lz
 arcurlbase=https://ftpmirror.gnu.org/binutils/
 blddir=$workdir/objdir
@@ -14,13 +14,6 @@ run_deps="zlib zstd"
 # 指定すると，$prefix/TARGET/lib64，$prefix/lib，$prefix/TARGET/lib を
 # 探す。$prefix/lib だけがいいんだけどほか 2 つのディレクトリは
 # つくらないつもりだからまあいいか。
-
-# make check は AArch64 では gold のテストでエラーが出るが無視して
-# よさそうなので -k をつける。
-# 24479 - aarch64 gold make check failure
-# https://sourceware.org/bugzilla/show_bug.cgi?id=24479
-# あと gold のテスト 3 つでエラーが出るなあ：
-# readelf: Error: the PHDR segment is not covered by a LOAD segment
 
 # --enable-shared だけではなく --disable-static も必要。サブディレクトリ
 # のいずれか（あるいはすべて）の既定値が yes なのかな。
@@ -40,18 +33,12 @@ run_deps="zlib zstd"
 # tooldir= は指定しないと一部のコマンドと ldscripts が $prefix/TARGET
 # に入る。
 
-# gold_cv_lib_static=no は gold のテストで libstdc++.a がインストール
-# されていないのにリンクしようとしてエラーになるのを避けるため。
-# この変数の値は configure で自動検出されるが，C++ ではなく C のソース
-# を静的ビルドできるかどうかで決めてしまう。
-
 # ビルドされた ld のライブラリのサーチパスの既定値が期待どおりに設定
 # されているかどうか確認するには，ld --verbose | grep SEARCH_DIR。
-# gold ではどうすればいいんだろう。
 #
 # あるいは確実に存在しないライブラリを指定して，サーチパスをひととおり
 # 探させてその過程を見てもいいか。ld --verbose -lfoobar とか。こちらは
-# gold でもできるし，-L などでサーチパスを変更した影響も調べられる。
+# -L などでサーチパスを変更した影響も調べられる。
 
 # 2.37 で新設の --enable-pgo-build[=lto] の情報はこのあたりか：
 # https://sourceware.org/pipermail/binutils/2020-October/113642.html
@@ -67,7 +54,13 @@ _patch () {
     # /etc/ld.so.conf を読まない。
     sed -i.orig \
         '/ld\.so\.conf"/,/^$/ { s|{|&/*|; s|}|*/&| }' \
-        ld/ldelf.c
+        ld/ldelf.c &&
+
+    # BFD リンカを ld.bfd としてインストールするのをやめさせる（ld
+    # だけにする）。
+    sed -i.orig \
+        '/^if.*enable_gold/,/^$/ { /^else/,/^$/ { /install_as_default=/s/yes/no/; /installed_linker=/s/ld\.bfd/ld/ }  }' \
+        ld/configure
 }
 
 _config () {
@@ -75,8 +68,6 @@ _config () {
         --prefix="$prefix" \
         --disable-silent-rules \
         --with-system-zlib \
-        --enable-gold \
-        --enable-ld=default \
         --enable-shared \
         --disable-static \
         --disable-nls \
@@ -91,12 +82,7 @@ _config () {
 _build () {
     lt_cv_sys_lib_dlsearch_path_spec="$prefix/lib $prefix/lib/../lib" \
     LEXLIB= \
-    gold_cv_lib_static=no \
     make tooldir="$prefix" "$@"
-}
-
-_test () {
-    make -k check "$@"
 }
 
 _install () {
