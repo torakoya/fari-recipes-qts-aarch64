@@ -2,7 +2,7 @@ pkgname=ruby
 pkgver=3.4.1
 arcext=tar.xz
 arcurlbase=https://cache.ruby-lang.org/pub/ruby/${pkgver%.*}/
-run_deps="gmp libffi libxcrypt libyaml ncurses openssl readline zlib"
+run_deps="gmp libffi libxcrypt libyaml openssl zlib"
 
 # ビルド後，こう始まる出力を（あれば）確認しておく：
 #     *** Following extensions are not compiled:
