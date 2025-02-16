@@ -1,5 +1,5 @@
 pkgname=man-pages
-pkgver=6.10
+pkgver=6.11
 arcext=tar.xz
 arcurlbase=https://mirrors.edge.kernel.org/pub/linux/docs/man-pages/
 
@@ -22,5 +22,13 @@ _test () {
 }
 
 _install () {
-    make install prefix="$prefix" "$@"
+    # -R: 6.11 から，GNU Make が 4.5（まだリリースされていない）より
+    # 前であれば必要になった。
+
+    # VERSION=: 6.11 で，インストールされる man ページにバージョンが
+    # 埋め込まれないことの workaround。配布物は Git リポジトリでは
+    # ないが，share/mk/configure/version.mk で定義されている VERSION
+    # が Git リポジトリ前提の記述に変更されている。
+
+    make -R install prefix="$prefix" VERSION="$pkgver" "$@"
 }
