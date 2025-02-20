@@ -1,5 +1,5 @@
 pkgname=sqlite
-pkgver=3.49.0
+pkgver=3.49.1
 arcname=sqlite-autoconf
 srcname=$arcname-$(printf '%d%02d%02d%02d' $(echo $pkgver | tr . ' '))
 arcfile=$srcname.$arcext
@@ -10,11 +10,6 @@ _patch () {
     # PREFIX/lib を RPATH に埋め込むのをやめさせる。
     sed -i.orig \
         's/@LDFLAGS_RPATH@/# &/' \
-        Makefile.in &&
-
-    # コマンドに libsqlite3.so をリンクする。
-    sed -i \
-        's/shell\.c sqlite3\.c/shell.c libsqlite3.so/' \
         Makefile.in
 }
 
@@ -29,10 +24,14 @@ _config () {
     # --soname=legacy
     # 共有ライブラリに 3.48.0 までとおなじ soname を埋め込む。
 
+    # --disable-static-shell
+    # コマンドに libsqlite3.so をリンクする（コードの重複がなくなる）。
+
     ./configure \
         --prefix="$prefix" \
         --disable-static \
         --soname=legacy \
+        --disable-static-shell \
         CFLAGS="$optflags" \
         CPPFLAGS=-DSQLITE_ENABLE_COLUMN_METADATA
 }
