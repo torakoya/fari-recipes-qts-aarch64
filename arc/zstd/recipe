@@ -1,5 +1,5 @@
 pkgname=zstd
-pkgver=1.5.6
+pkgver=1.5.7
 arcurlbase=https://github.com/facebook/zstd/releases/download/v$pkgver/
 
 # README.md だけでなく lib/README.md や programs/README.md
